@@ -5,11 +5,19 @@
 #' This function monetizes health impacts
 
 # ARGUMENTS ####################################################################
-#' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.
+#' @param output_attribute \code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()}, \code{healthiar::compare()} or \code{healthiar::daly()} as results.
+#' The YLL and YLD in the output of \code{healthiar::daly()} are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while \code{n_years} is used for the YLD.
 #' @param impact \code{Numeric value} referring to the health impacts to be monetized (without attribute function). If a \code{Numeric vector} is entered multiple assessments (by year) will be carried out. Be aware that the value for year 0 (current) must be entered, while n_years does not include the year 0. Thus, length of impact = n_years + 1.
 #' @param valuation \code{Numeric value} referring to unit value of a health impact.
+#' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+#' The values must be the same within each geographic unit and dimension entered in \code{main_results_by}.
 #' @param discount_rate \code{Numeric value} showing the discount rate for future years.
+#' If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one discount rate per exposure-outcome pair).
 #' @param discount_shape \code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
+#' If \code{output_attribute} is entered, a \code{character vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one discount shape per exposure-outcome pair).
 #' @param n_years \code{Numeric value} referring to number of years in the future to be considered in the discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1).
 #' @param inflation_rate \code{Numeric value} between 0 and 1 referring to the annual inflation (increase of prices).
 #' This value is used to adjust monetization for inflation (converting nominal into real values by appyling a deflator).
@@ -24,7 +32,11 @@
 #' (e.g., income elasticity).
 #' This adjusts the valuation upward to reflect rising wealth,
 #' independent of general price inflation.
-#' As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+#' If \code{output_attribute} contains more than one assessment
+#' (several geographic units or dimensions entered in \code{main_results_by}),
+#' a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+#' (e.g. one rate per country), constant over the years.
+#' Otherwise, as in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
 #' can be entered instead of one single value.
 #' @param info \code{String}, \code{data frame} or \code{tibble} providing \strong{information about the assessment}. Only attached if \code{impact} is entered by the users. If \code{output_attribute} is entered, use \code{info} in that function or add the column manually. \emph{Optional argument.}
 
@@ -51,6 +63,21 @@
 #'  \item Hyperbolic as \insertCite{Harvey1986_ms;textual}{healthiar}
 #'  \item Hyperbolic as \insertCite{Mazur1987_book;textual}{healthiar}}
 #'
+#' \strong{Single values and vectors}
+#'
+#' Arguments describing the value of the health impact
+#' (\code{valuation}, \code{discount_rate}, \code{discount_shape})
+#' accept one value or, if \code{output_attribute} is entered,
+#' a vector parallel to the arguments of the attribute function
+#' (e.g. one value per exposure-outcome pair).
+#' \code{inflation_rate} accepts one value or a vector with one value per year,
+#' so that all valuations share one price base.
+#' \code{real_growth_rate} reflects income growth, which differs by country and region.
+#' Therefore, if \code{output_attribute} contains more than one assessment,
+#' it accepts one value or a vector parallel to the arguments of the attribute function
+#' (one rate per row, constant over the years).
+#' For one single assessment, it accepts one value or a vector with one value per year.
+#'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.
 #' More specifically, see chapters:
@@ -75,6 +102,8 @@
 #' }
 #'
 #' If the argument \code{output_attribute} was specified, then the two results elements are added to the existing output.
+#' If \code{output_attribute} comes from \code{healthiar::daly()}, \code{monetization_main} contains the monetized YLL and YLD (suffixes \code{_yll} and \code{_yld}) and their sum,
+#' while \code{monetization_detailed} contains the monetization of YLL and YLD (\code{monetization_yll} and \code{monetization_yld}).
 #'
 # EXAMPLES #####################################################################
 #' @examples
@@ -104,7 +133,7 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}
+#'   \item Upstream: \code{\link{attribute_health}}, \code{\link{attribute_lifetable}}, \code{\link{compare}}, \code{\link{daly}}
 #'   \item Alternative: \code{\link{get_inflation_factor}},
 #'     \code{\link{get_discount_factor}}, \code{\link{cba}}
 #' }
@@ -136,6 +165,89 @@ monetize <- function(output_attribute = NULL,
   input_args <-
     get_input_args(environment = environment(),
                    call = match.call())
+
+  # If output of daly() ####
+  # The DALY cannot be monetized as one impact because the YLL from the
+  # life table have to be discounted year by year.
+  # daly() stores the outputs of YLL and YLD in its input_args,
+  # so they are monetized separately and then summed
+  output_attribute_yll <-
+    output_attribute$health_detailed$input_args$value$output_attribute_yll
+  output_attribute_yld <-
+    output_attribute$health_detailed$input_args$value$output_attribute_yld
+
+  is_daly <-
+    !is.null(output_attribute_yll) && !is.null(output_attribute_yld) && is.null(impact)
+
+  if(is_daly){
+
+    # n_years is not entered for YLL if life table
+    # because then the years are taken from the life table
+    # (and monetize() would warn that n_years is ignored)
+    is_lifetable_yll <-
+      !is.null(output_attribute_yll$health_detailed$results_by_year)
+
+    output_monetization_yll <-
+      monetize(output_attribute = output_attribute_yll,
+               valuation = valuation,
+               discount_rate = discount_rate,
+               discount_shape = discount_shape,
+               n_years = if(is_lifetable_yll) NULL else n_years,
+               inflation_rate = inflation_rate,
+               real_growth_rate = real_growth_rate)
+
+    output_monetization_yld <-
+      monetize(output_attribute = output_attribute_yld,
+               valuation = valuation,
+               discount_rate = discount_rate,
+               discount_shape = discount_shape,
+               n_years = n_years,
+               inflation_rate = inflation_rate,
+               real_growth_rate = real_growth_rate)
+
+    monetization_main_yll <- output_monetization_yll[["monetization_main"]]
+    monetization_main_yld <- output_monetization_yld[["monetization_main"]]
+
+    # Join by the columns that identify the rows (as in daly())
+    # and by the input values that are the same in YLL and YLD.
+    # Not n_years because it differs (life table vs. entered)
+    cols_for_join <-
+      intersect(names(monetization_main_yll), names(monetization_main_yld))
+    cols_for_join <-
+      cols_for_join[!grepl("impact|n_years", cols_for_join)]
+
+    monetization_main <-
+      dplyr::full_join(
+        monetization_main_yll,
+        monetization_main_yld,
+        by = cols_for_join,
+        suffix = c("_yll", "_yld")) |>
+      dplyr::mutate(
+        impact = impact_yll + impact_yld,
+        monetized_impact = monetized_impact_yll + monetized_impact_yld,
+        monetized_impact_unadjusted =
+          monetized_impact_unadjusted_yll + monetized_impact_unadjusted_yld,
+        monetized_impact_rounded = round(monetized_impact)) |>
+      # The rounded values of YLL and YLD are not needed anymore
+      dplyr::select(-dplyr::any_of(c("monetized_impact_rounded_yll",
+                                     "monetized_impact_rounded_yld"))) |>
+      # The columns that identify the rows first (also the ones only in YLD)
+      dplyr::relocate(dplyr::contains("_ci"), dplyr::contains("info"))
+
+    # Add the monetization to the DALY output
+    # The monetization of YLL and YLD is kept in the detailed results
+    output_monetization <-
+      c(output_attribute,
+        list(
+          monetization_main = monetization_main,
+          monetization_detailed = list(
+            monetization_yll = output_monetization_yll[c("monetization_main",
+                                                         "monetization_detailed")],
+            monetization_yld = output_monetization_yld[c("monetization_main",
+                                                         "monetization_detailed")])))
+
+    return(output_monetization)
+  }
 
   # Define variables ####
   # Store variables to increase readability of conditions
@@ -185,7 +297,6 @@ monetize <- function(output_attribute = NULL,
   } else {
     is_lifetable <- FALSE
     }
-
 
 
   is_not_lifetable <- ! is_lifetable
@@ -250,6 +361,19 @@ monetize <- function(output_attribute = NULL,
     stop(paste0("Enter a value for impact or for output_attribute but not both."),
          call. = FALSE)
   }
+
+  ## Error if vector in valuation, discount_rate or discount_shape with impact ####
+  # Vectors are parallel to the arguments of the attribute function,
+  # so they need output_attribute.
+  # With impact, a vector would be silently applied per year instead
+  validate_args(
+    args = list(valuation = valuation,
+                discount_rate = discount_rate,
+                discount_shape = discount_shape),
+    arg_names = c("valuation", "discount_rate", "discount_shape"),
+    is_valid = function(x){is.null(impact) || length(x) == 1},
+    message = paste0("{arg} must be one single value if impact is entered. ",
+                     "Vectors are only possible with output_attribute."))
 
   ## Error if no right category is passed passed ####
   # Here input_args$value (and not the local value) is enough
@@ -384,6 +508,176 @@ monetize <- function(output_attribute = NULL,
 
 
 
+  # Values by row ####
+  # valuation, discount_rate and discount_shape can be entered as vectors
+  # parallel to the arguments of the attribute function (e.g. one valuation per
+  # exposure-outcome pair). Then all pairs and geographic units are
+  # monetized in one single call.
+  # They are attached to the results by the dimensions that identify the rows
+  # of the main results, i.e. the larger geographic unit and main_results_by.
+  # Since monetization is linear in the impact, this gives the same as
+  # monetizing each row separately.
+  # real_growth_rate can also be entered as a vector by row
+  # (growth comes from income growth, which differs by country and region),
+  # but a vector in real_growth_rate can also contain year-specific rates.
+  # The vector refers to rows if the attribute function contains
+  # more than one assessment (geographic unit or dimension entered in main_results_by)
+  # and to years if it contains one single assessment
+  if(!is.null(output_attribute)){
+    if(is_compare){
+      input_args_attribute <- arg_values_scen_1
+    } else {
+      input_args_attribute <- output_attribute$health_detailed$input_args$value
+    }
+  }
+
+  # Outputs of e.g. multiexpose() or daly() store the outputs they combine
+  # and not the arguments of the attribute function
+  # (geo_id_micro is always available after the attribute functions)
+  has_args_attribute <-
+    !is.null(output_attribute) &&
+    !is.null(input_args_attribute$geo_id_micro)
+
+  # NULL if there are no arguments of the attribute function
+  # (main_results_by is also used to select the columns of monetization_main)
+  main_results_by <- NULL
+
+  if(has_args_attribute){
+
+    # The user enters the column names of info without prefix,
+    # while add_info() adds it (same as in get_output())
+    main_results_by <- input_args_attribute$main_results_by
+    info_names <- names(input_args_attribute$info)
+
+    if(!is.null(main_results_by) && !is.null(info_names)){
+      main_results_by <-
+        purrr::map_chr(
+          main_results_by,
+          ~ if (.x %in% info_names) {paste0("info_", .x)} else {.x})
+    }
+
+    if(!is.null(input_args_attribute$geo_id_macro)){
+      larger_geo_id <- "geo_id_macro"
+    } else {
+      larger_geo_id <- "geo_id_micro"
+    }
+
+    value_by_row_keys <- unique(c(larger_geo_id, main_results_by))
+
+    # Rows of the attribute function (without values) to count the assessments
+    rows_attribute <-
+      tibble::tibble(
+        geo_id_micro = input_args_attribute$geo_id_micro,
+        geo_id_macro = input_args_attribute$geo_id_macro,
+        sex = input_args_attribute$sex,
+        age_group = input_args_attribute$age_group) |>
+      add_info(info = input_args_attribute$info)
+
+    # Columns that are not entered (e.g. exp_category) cannot be keys
+    value_by_row_keys <- intersect(value_by_row_keys, names(rows_attribute))
+
+    n_assessments <-
+      rows_attribute |>
+      dplyr::distinct(dplyr::across(dplyr::all_of(value_by_row_keys))) |>
+      nrow()
+  }
+
+  is_real_growth_rate_by_row <-
+    has_args_attribute &&
+    length(real_growth_rate) > 1 &&
+    n_assessments > 1
+
+  is_value_by_row <-
+    !is.null(output_attribute) &&
+    (length(valuation) > 1 ||
+       length(discount_rate) > 1 ||
+       length(discount_shape) > 1 ||
+       is_real_growth_rate_by_row)
+
+  if(is_value_by_row){
+
+    ## Error if no arguments of the attribute function ####
+    # Without them, the values cannot be attached to the right rows
+    if(!has_args_attribute){
+      stop(
+        paste0("valuation, discount_rate and discount_shape can only be entered ",
+               "as vectors if output_attribute comes from attribute_health(), ",
+               "attribute_lifetable() or compare(). ",
+               "Otherwise, enter one single value."),
+        call. = FALSE)
+    }
+
+    # Year-specific rates are not by row (see above)
+    real_growth_rate_by_row <-
+      if(is_real_growth_rate_by_row) real_growth_rate else NULL
+
+    ## Error if incompatible length ####
+    # The values must be parallel to the arguments of the attribute function,
+    # i.e. all lengths must be 1 or one common length.
+    # Otherwise tibble() below stops with a message that does not refer to
+    # the arguments of monetize().
+    # A common mistake is to enter one value per pair instead of
+    # one value per row of the attribute function
+    value_lengths <-
+      lengths(list(valuation = valuation,
+                   discount_rate = discount_rate,
+                   discount_shape = discount_shape,
+                   real_growth_rate = real_growth_rate_by_row))
+
+    id_lengths <-
+      c(lengths(list(input_args_attribute$geo_id_micro,
+                     input_args_attribute$geo_id_macro,
+                     input_args_attribute$sex,
+                     input_args_attribute$age_group)),
+        # NROW() because info can be a vector or a data frame
+        NROW(input_args_attribute$info))
+
+    all_lengths <- c(value_lengths, id_lengths)
+
+    has_incompatible_length <-
+      length(unique(all_lengths[all_lengths > 1])) > 1
+
+    if(has_incompatible_length){
+      stop(
+        paste0("valuation, discount_rate, discount_shape and real_growth_rate ",
+               "must have a length of 1 ",
+               "or the same length as the arguments of the attribute function."),
+        call. = FALSE)
+    }
+
+    value_by_row <-
+      tibble::tibble(
+        geo_id_micro = input_args_attribute$geo_id_micro,
+        geo_id_macro = input_args_attribute$geo_id_macro,
+        sex = input_args_attribute$sex,
+        age_group = input_args_attribute$age_group,
+        valuation = valuation,
+        discount_rate = discount_rate,
+        discount_shape = discount_shape,
+        real_growth_rate = real_growth_rate_by_row) |>
+      add_info(info = input_args_attribute$info) |>
+      dplyr::select(dplyr::all_of(value_by_row_keys),
+                    dplyr::any_of(c("valuation", "discount_rate",
+                                    "discount_shape", "real_growth_rate"))) |>
+      # The ids are character in the results (e.g. geo_id_micro = 1 becomes "1")
+      # while the info columns keep the type entered by the user (e.g. integer year)
+      dplyr::mutate(
+        dplyr::across(
+          dplyr::any_of(c("geo_id_micro", "geo_id_macro", "sex", "age_group")),
+          as.character)) |>
+      dplyr::distinct()
+
+    ## Error if more than one value per row of the main results ####
+    if(anyDuplicated(value_by_row[value_by_row_keys]) > 0){
+      stop(
+        paste0("valuation, discount_rate, discount_shape and real_growth_rate ",
+               "must have one single value ",
+               "per geographic unit and dimension entered in main_results_by."),
+        call. = FALSE)
+    }
+  }
+
+
   # Monetize ####
 
   ## Create function add_monetized_impact() ###############
@@ -413,19 +707,59 @@ monetize <- function(output_attribute = NULL,
           if(length(rate) > 1) toString(rate) else rate
         }
 
+      # Values by row are joined to the rows they belong to
+      # Otherwise one single value for all rows
+      if(is_value_by_row){
+        df_with_input <- 
+          dplyr::left_join(
+            df,
+            value_by_row,
+            by = value_by_row_keys)
+
+        ## Error if rows without value ####
+        # A row of the results without match in value_by_row would get NA
+        # in valuation and therefore in monetized_impact without any warning
+        # (e.g. if the results were modified after the attribute function).
+        # valuation and not discount_rate or discount_shape
+        # because valuation is always entered
+        rows_without_value <-
+          df_with_input |>
+          dplyr::filter(is.na(valuation)) |>
+          dplyr::distinct(dplyr::across(dplyr::all_of(value_by_row_keys)))
+
+        if(nrow(rows_without_value) > 0){
+          stop(
+            paste0("valuation, discount_rate, discount_shape and real_growth_rate could not be ",
+                   "assigned to these rows of the results (",
+                   toString(value_by_row_keys), "): ",
+                   toString(purrr::pmap_chr(rows_without_value, paste)), ". ",
+                   "Please enter output_attribute as obtained from ",
+                   "the attribute function."),
+            call. = FALSE)
+        }
+      } else {
+        df_with_input <- 
+          dplyr::mutate(df,
+            valuation = valuation,
+            discount_rate = discount_rate,
+            discount_shape = discount_shape)
+      }
+
       df_with_input <-
-        df |>
+        df_with_input |>
         # Add columns for input data in the table
-        dplyr::mutate(valuation = valuation,
-                      discount_rate = discount_rate,
-                      n_years = n_years,
-                      discount_shape = discount_shape,
+        dplyr::mutate(n_years = n_years,
                       inflation_rate =
-                        collapse_if_year_specific(inflation_rate),
-                      real_growth_rate =
-                        collapse_if_year_specific(real_growth_rate)) |>
+                        collapse_if_year_specific(inflation_rate)) |>
         # Add info
         add_info(info = info)
+
+      # real_growth_rate by row is already joined above
+      if(!is_real_growth_rate_by_row){
+        df_with_input <-
+          dplyr::mutate(df_with_input,
+            real_growth_rate = collapse_if_year_specific(real_growth_rate))
+      }
 
 
       # Add year
@@ -461,10 +795,18 @@ monetize <- function(output_attribute = NULL,
                              inflation_rate = inflation_rate,
                              is_deflation = TRUE)
 
-      real_growth_factor <-
-        get_inflation_factor(n_years = df_by_year$year,
-                             inflation_rate = real_growth_rate,
-                             is_deflation = FALSE)
+      if(is_real_growth_rate_by_row){
+        # One rate per row (constant over the years), as for discount_rate.
+        # Not get_inflation_factor() because it would read the column
+        # as year-specific rates
+        real_growth_factor <-
+          (1 + df_by_year$real_growth_rate) ^ df_by_year$year
+      } else {
+        real_growth_factor <-
+          get_inflation_factor(n_years = df_by_year$year,
+                               inflation_rate = real_growth_rate,
+                               is_deflation = FALSE)
+      }
 
 
       df_by_year <-
@@ -579,17 +921,6 @@ monetize <- function(output_attribute = NULL,
       n_years <- max(impact_detailed$year) - year_of_analysis
 
 
-      # Output will be adapted according to monetized impacts
-      impact_detailed <-
-        impact_detailed |>
-        ## Calculate total, discounted life years (single value) per sex & ci
-        dplyr::mutate(
-          n_years = n_years,
-          discount_rate = discount_rate,
-          discount_shape = discount_shape,
-          inflation_rate = inflation_rate,
-          real_growth_rate = real_growth_rate)
-
       impact_detailed  <-
         add_monetized_impact(
           df = impact_detailed,
@@ -620,8 +951,11 @@ monetize <- function(output_attribute = NULL,
       }
 
       # Get the main and detailed output by aggregating and/or filtering cases (rows)
+      # input_args are passed so that get_output() keeps main_results_by
+      # (e.g. exposure-outcome pairs) apart instead of adding them up
       output_monetization <-
-        get_output(results_raw = impact_detailed) |>
+        get_output(input_args = output_health[["health_detailed"]][["input_args"]],
+                   results_raw = impact_detailed) |>
         # Rename the list elements (not anymore health but health including monetization)
         stats::setNames(c("monetization_main", "monetization_detailed"))
 
@@ -669,6 +1003,9 @@ monetize <- function(output_attribute = NULL,
     # Identify the relevant columns for monetization that are in the output
     relevant_columns <-
       c("info", "geo_id_micro", "geo_id_macro",
+        # The dimensions entered in main_results_by (e.g. sex or age_group)
+        # define the rows too
+        main_results_by,
         "impact",
         "discount_rate", "discount_shape", "inflation_rate", "n_years",
         "real_growth_rate",

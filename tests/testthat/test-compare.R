@@ -1274,6 +1274,32 @@ testthat::test_that("results the same Sciensano tobacco example |pathway_compare
   )
 })
 
+testthat::test_that("results the same |main_results_by|two_pairs|", {
+
+  # compare() did not pass main_results_by to get_output(), so health_main
+  # summed up the exposure-outcome pairs kept apart in the scenarios
+  attribute_two_pairs <- function(exp_central){
+    healthiar::attribute_health(
+      info = data.frame(pair = c("pm2.5_copd", "no2_asthma")),
+      main_results_by = "pair",
+      exp_central = exp_central,
+      cutoff_central = c(5, 10),
+      rr_central = c(1.369, 1.041),
+      rr_increment = 10,
+      erf_shape = c("log_linear", "linear"),
+      bhd_central = c(30747, 12000))
+  }
+
+  output_compare <-
+    healthiar::compare(
+      output_attribute_scen_1 = attribute_two_pairs(c(8.85, 22.1)),
+      output_attribute_scen_2 = attribute_two_pairs(c(6, 15)))
+
+  testthat::expect_equal(
+    object = output_compare$health_main$impact,
+    expected = output_compare$health_detailed$results_raw$impact)
+})
+
 # ERROR OR WARNING ########
 ## ERROR #########
 testthat::test_that("error if not the same arguments", {

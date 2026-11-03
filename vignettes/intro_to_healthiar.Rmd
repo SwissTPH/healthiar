@@ -77,7 +77,9 @@ available in the
 ## Input
 
 You can enter data in *healthiar* functions using: 
+
 - hard coded values or
+
 - columns inside pre-loaded data frames or tibbles.
 
 Let's see some examples calling the most important function in *healthiar*: `attribute_health()`.
@@ -2655,9 +2657,11 @@ $$real\_growth\_factor =(1 + real\_growth\_rate)^{n\_years}$$
 Where $real\_growth\_rate$ represents the annual real growth rate in health valuation.
 As in `inflation_rate`, a vector of year-specific rates can be entered instead of
 one single value, in which case the factor is the product of the year-specific factors.
-This ensures that long-term environmental impacts are not undervalued. 
+This ensures that long-term environmental impacts are not undervalued.
 
-
+The argument `output_attribute` accepts the output of `attribute_health()`, `attribute_lifetable()`, `compare()` or `daly()`.
+With the output of `attribute_lifetable()`, the impacts are monetized year by year and the number of years is taken from the life table.
+With the output of `daly()`, the YLL and the YLD are monetized separately and then summed, i.e. the YLL from the life table are discounted year by year, while `n_years` is used for the YLD.
 
 
 
@@ -2718,6 +2722,52 @@ results <- monetize(
 )
 ```
 
+### Example 3: multiple exposure-outcome pairs
+
+In the example below, we monetize the COPD cases attributable to PM2.5 and the asthma cases attributable to NO2 from the chapter *Multiple exposure-outcome pairs* in one single call, with a different value and discounting per pair.
+
+The arguments describing the value of the health impact (`valuation`, `discount_rate` and `discount_shape`) are entered as vectors parallel to the arguments of `attribute_health()`, exactly as `exp_central` or `bhd_central`. They must have one single value per geographic unit and dimension entered in `main_results_by`, here per pair.
+
+`real_growth_rate` can be entered in the same way (e.g. one rate per country, since it reflects income growth), constant over the years. A vector refers to year-specific rates only if `output_attribute` contains one single assessment.
+
+In contrast, `inflation_rate` is the same for all pairs, so that all valuations share one price base: a vector entered there refers to year-specific rates.
+
+#### Function call
+
+```{r}
+results_pairs <- attribute_health(
+    info = data.frame(
+      pair = rep(c("pm2.5_copd", "no2_asthma"), each = 2)),
+    main_results_by = "pair",
+    exp_central    = c(8.85, 9.20, 22.1, 24.5),
+    cutoff_central = c(5, 5, 10, 10),
+    rr_central     = c(1.369, 1.369, 1.041, 1.041),
+    rr_increment   = 10,
+    erf_shape      = c("log_linear", "log_linear", "linear", "linear"),
+    bhd_central    = c(30747, 31500, 12000, 12500),
+    geo_id_micro   = rep(c("a", "b"), times = 2)
+  )
+
+monetized_pairs <- monetize(
+    output_attribute = results_pairs,
+    valuation      = c(50000, 50000, 3000, 3000), # E.g. EURO per case
+    discount_rate  = c(0.03, 0.03, 0.01, 0.01),
+    discount_shape = rep(c("exponential", "hyperbolic_mazur_1987"), each = 2),
+    n_years = 5
+)
+```
+
+#### Main results
+
+One row per exposure-outcome pair and geographic unit, each monetized with its own value and discounting.
+
+```{r eval=TRUE, include=TRUE, echo=TRUE}
+monetized_pairs$monetization_main |>
+  dplyr::select(info_pair, geo_id_micro, valuation, discount_rate,
+                discount_shape, monetized_impact_rounded) |>
+  knitr::kable()
+```
+
 ## Cost-benefit analysis
 
 ### Goal
@@ -2726,33 +2776,36 @@ To compare the monetized health benefits of an intervention with its costs.
 
 ### Methods
 
-The CBA is a type of economic evaluation that compares the costs and the
-benefits of an intervention, considering both measures expressed in
-monetary terms.
+The CBA is a type of economic evaluation that compares 
+the costs and the benefits of an intervention, 
+considering both measures expressed in monetary terms.
 
-To perform a CBA, you can use the function `cba()`. This approach
-requires monetizing benefits so they can be directly compared with
-costs. Since interventions typically generate costs and benefits over
-multi-year time horizons, discounting is a common practice to obtain the
-present value of future costs and benefits. Depending on the reference
-guidelines, the discount rate can be specified as the same for costs and
-benefits or different across them. The outputs of a Cost-Benefit
-Analysis can be expressed as three main indicators
-[@Boardman2018_book]: - intervention’s net benefit: the difference
-between monetized benefits and costs - Cost-Benefit Ratio (CBR):
-monetized benefits divided by costs and - Return on Investment (ROI):
-return generated per unit of expenditure by relating net benefits to the
-intervention’s costs.
+To perform a CBA, you can use the function `cba()`. 
+This approach requires monetizing benefits so they can be directly compared with costs. 
+Since interventions typically generate costs and benefits over multi-year time horizons,
+discounting is a common practice to obtain the present value of future costs and benefits.
+Depending on the reference guidelines, 
+the discount rate can be specified as the same for costs and benefits or different across them.
+The outputs of a Cost-Benefit Analysis can be expressed 
+as three main indicators [@Boardman2018_book]: 
 
-An intervention is recommended from a Cost-Benefit Analysis perspective,
-if it yields a positive net benefit or a positive ROI, or equivalently,
-a CBR greater than one, meaning that the intervention’s monetized
-benefits exceed its costs. These three outputs are available when
-running `cba()` and are calculated considering the following formulas.
+  - intervention’s net benefit: the difference between monetized benefits and costs
 
-**Net Benefit** $$net\_benefit = benefit - cost$$
+  - Cost-Benefit Ratio (CBR): monetized benefits divided by costs and 
 
-**Cost-Benefit Ratio (CBR)** $$cbr = \frac{benefit}{cost}$$
+  - Return on Investment (ROI): return generated per unit of expenditure by relating net benefits to the intervention’s costs.
+    
+An intervention is recommended from a Cost-Benefit Analysis perspective, 
+if it yields a positive net benefit or a positive ROI, or equivalently, 
+a CBR greater than one, meaning that the intervention’s monetized benefits exceed its costs.
+These three outputs are available when running `cba()` 
+and are calculated considering the following formulas.
+
+**Net Benefit**
+$$net\_benefit = benefit - cost$$
+
+**Cost-Benefit Ratio (CBR)**
+$$cbr = \frac{benefit}{cost}$$
 
 **Return on Investment (ROI)**
 $$roi = \frac{benefit - cost}{cost} \times 100$$
@@ -2956,12 +3009,18 @@ The reliability of the MDI can be assessed using Cronbach's alpha
 $$ \alpha = \frac{k}{k - 1} \left( 1 - \frac{\sum_{i=1}^{k} \sigma^2_{y_i}}{\sigma^2_x} \right) $$
 where:
 
-- $k$ is the number of items/variables.
-- $\sigma^2_{y_i}$ is the variance of the $i$-th item.
-- $\sum_{i=1}^{k} \sigma^2_{y_i}$ is the sum of the variances of all
-  items.
-- $\sigma^2_x$ is the total variance of the observed total scores (the
-  sum of all items).
+* $k$ is the number of items/variables.
+* $\sigma^2_{y_i}$ is the variance of the $i$-th item.
+* $\sum_{i=1}^{k} \sigma^2_{y_i}$ is the sum of the variances of all items.
+* $\sigma^2_x$ is the total variance of the observed total scores (the sum of all items).
+
+
+To apply this approach, you should ensure that the data set is as complete as possible.
+Otherwise, you can try to impute missing data using:
+
+- Time-Based Imputation: Linear regression based on historical trends if prior years' data is complete.
+
+- Indicator-Based Imputation: Multiple linear regression if the missing indicator correlates strongly with others.
 
 To apply this approach, you should ensure that the data set is as
 complete as possible. Otherwise, you can try to impute missing data
@@ -3011,11 +3070,20 @@ mdi$mdi_main |>
   knitr::kable()
 ```
 
-The function assesses the reliability of the MDI based on the Cronbach's
-alpha value as follows: - 0.9 and higher: Excellent reliability -
-between 0.8 (included) and 0.9: Good reliability - between 0.7
-(included) and 0.8: Acceptable reliability - between 0.6 (included) and
-0.7: Questionable reliability - lower than 0.6: Poor reliability
+
+The function assesses the reliability of the MDI based on the Cronbach's alpha value as follows:
+
+- 0.9 and higher: Excellent reliability
+
+- between 0.8 (included) and 0.9: Good reliability
+
+- between 0.7 (included) and 0.8: Acceptable reliability
+
+- between 0.6 (included) and 0.7: Questionable reliability
+
+- lower than 0.6: Poor reliability
+
+
 
 #### Detailed results
 

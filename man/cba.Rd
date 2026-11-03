@@ -19,11 +19,15 @@ cba(
 )
 }
 \arguments{
-\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()} or \code{healthiar::compare()} as results.}
+\item{output_attribute}{\code{List} produced by \code{healthiar::attribute_health()}, \code{healthiar::attribute_lifetable()}, \code{healthiar::compare()} or \code{healthiar::daly()} as results.
+The YLL and YLD in the output of \code{healthiar::daly()} are monetized separately and then summed. Thus, YLL from the life table are discounted year by year, while \code{n_years} is used for the YLD.}
 
 \item{impact_benefit}{\code{Numeric value} referring to the positive health impact as result of a reduction of harmful exposure.}
 
-\item{valuation}{\code{Numeric value} referring to unit value of a health impact.}
+\item{valuation}{\code{Numeric value} referring to unit value of a health impact.
+If \code{output_attribute} is entered, a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one valuation per exposure-outcome pair) to monetize all of them in one single call.
+The values must be the same within each geographic unit and dimension entered in \code{main_results_by}.}
 
 \item{cost}{\code{Numeric value} referring to the investment cost to achieve the reduction of exposure.}
 
@@ -43,10 +47,16 @@ to the annual real-term appreciation in the societal value of health
 (e.g., income elasticity).
 This adjusts the valuation upward to reflect rising wealth,
 independent of general price inflation.
-As in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
+If \code{output_attribute} contains more than one assessment
+(several geographic units or dimensions entered in \code{main_results_by}),
+a \code{numeric vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one rate per country), constant over the years.
+Otherwise, as in \code{inflation_rate}, a \code{numeric vector} of year-specific rates
 can be entered instead of one single value.}
 
-\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.}
+\item{discount_shape}{\code{String} referring to the assumed equation for the discount factor. By default: \code{"exponential"}. Otherwise: \code{"hyperbolic_harvey_1986"} or \code{"hyperbolic_mazur_1987"}.
+If \code{output_attribute} is entered, a \code{character vector} parallel to the arguments of the attribute function can be entered instead
+(e.g. one discount shape per exposure-outcome pair).}
 
 \item{n_years_benefit, n_years_cost}{\code{Numeric value} referring to number of years in the future to be considered in the benefit and cost side (respectively). Years for discounting and/or inflation. Be aware that the year 0 (without discounting/inflation, i.e. the present) is not be counted here. If a vector is entered in the argument impact, n_years does not need to be entered (length of impact = n_years + 1)}
 }
