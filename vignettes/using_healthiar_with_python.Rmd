@@ -38,7 +38,7 @@ To use the Python package, you need Python (version 3.9 or newer) and R, with th
 2.  Add the path of your R installation as environment variable (**Required**). In Python, you can do this as follows:
     ```{python}
     import os
-    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64" + os.pathsep + os.environ["PATH"]
     ```
 
 # Modules
