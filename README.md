@@ -93,14 +93,19 @@ You have different materials to learn about the R package *healthiar*.
 Have a quick and visual look at the [cheat sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html):
 [![Package Cheatsheet](man/figures/cheatsheet_healthiar_1st_page.png)](https://swisstph.github.io/healthiar/articles/cheatsheet.html)
 
-### Vignette
-Read the vignette (~ package manual) *intro_to_healthiar*, which you can access:
+### Vignettes
+A vignette is a kind of package manual. *healthiar* has the following vignettes:
 
-a) on the [package website](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html) (recommended)
+- [*Intro to healthiar*](https://swisstph.github.io/healthiar/articles/intro_to_healthiar.html): Detailed explanations of the *healthiar* functionalities including methodology, references and examples.
 
-b) in the R console: Run `vignette("intro_to_healthiar")`
+- [*Using healthiar with Python*](https://swisstph.github.io/healthiar/articles/using_healthiar_with_python.html): Instructions on how to use the wrapper that enables the use of *healthiar* in a Python environment instead of in R.
 
-c) in the web browser: Run `browseVignettes("healthiar")` in the R console and the page will open up in your browser
+To find the latest version of the vignettes, it is recommended to see the *healthiar* web pages (see the links above). If you prefer to open the vignettes from your locally installed package, you have two options in the R console:
+
+a) `browseVignettes("healthiar")` to get the list of all vignettes or
+
+b) `vignette("intro_to_healthiar")` or `vignette("using_healthiar_with_python")` to open a specific vignette
+
 
 ### Function documentation
 See the function help pages for information about specific functions. You can access the function documentation of e.g. the function `attribute_health` by
