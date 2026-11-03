@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1803</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1805</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/cheatsheet.html">Cheat sheet</a></li>
     <li><a class="dropdown-item" href="../articles/intro_to_healthiar.html">Vignette: Intro to healthiar</a></li>
+    <li><a class="dropdown-item" href="../articles/using_healthiar_with_python.html">Vignette: Using healthiar with Python</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -81,6 +82,11 @@ e.g. <code>example("get_risk")</code>.</p>
 or the <a href="https://swisstph.github.io/healthiar/">package
 website</a>. By using <em>healthiar</em>, you agree to its <a href="https://github.com/SwissTPH/healthiar?tab=readme-ov-file#disclaimer-and-license" class="external-link">disclaimer
 and license</a>.</p>
+<p><em>NOTE</em>: Before using <code>healthiar</code>, please read
+carefully the information provided in the <a href="https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme" class="external-link">readme
+file</a> or the <a href="https://swisstph.github.io/healthiar/">welcome
+webpage</a>. By using <code>healthiar</code>, you agree to the <a href="https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme" class="external-link">terms
+of use and disclaimer</a>.</p>
 <hr>
 <div class="section level2">
 <h2 id="about-healthiar">About <em>healthiar</em><a class="anchor" aria-label="anchor" href="#about-healthiar"></a>
@@ -95,6 +101,10 @@ exposures such as green spaces, chemicals, physical activity…</p>
 of the <a href="https://swisstph.github.io/healthiar/articles/cheatsheet.html">cheat
 sheet</a>. The whole list of functions included in <em>healthiar</em> is
 linked there and available in the <a href="https://swisstph.github.io/healthiar/reference/index.html">reference</a>.</p>
+<p>See below a an overview of the <code>healthiar</code>, which is the
+first page of the <a href="https://swisstph.github.io/healthiar/articles/cheatsheet.html">cheat
+sheet</a>. The whole list of functions included in
+<code>healthiar</code> is linked there and available in the <a href="https://swisstph.github.io/healthiar/reference/index.html">reference</a>.</p>
 <div class="float">
 <img src="../reference/figures/cheatsheet_healthiar_1st_page.png" alt="Figure: Overview of healthiar"><div class="figcaption">Figure: Overview of <em>healthiar</em>
 </div>
@@ -194,6 +204,10 @@ additional info about the assessment.</p></li>
 structure but using different prefixes. E.g., <code>social_</code> in
 <code><a href="../reference/socialize.html">socialize()</a></code> and <code>monetization_</code> in
 <code><a href="../reference/monetize.html">monetize()</a></code>.</p>
+<p>In other <code>healthiar</code> functions you can find a similar
+output structure but using different prefixes. E.g.,
+<code>social_</code>in <code><a href="../reference/socialize.html">socialize()</a></code> and
+<code>monetization_</code>in <code>monetitize()</code>.</p>
 </div>
 <div class="section level5">
 <h5 id="access">Access<a class="anchor" aria-label="anchor" href="#access"></a>
@@ -214,13 +228,16 @@ example above)</p></li>
 (e.g. <em>Environment</em> in RStudio), click on the variable you want
 to inspect, and then open the <code>health_main</code> results
 table</p></li>
+<li><p>By mouse: go to the <em>Environment</em> tab in RStudio and click
+on the variable you want to inspect, and then open the
+<code>health_main</code> results table</p></li>
 <li><p>With <code>[[]]</code> operator
 <code>results_pm_copd[["health_main"]]</code></p></li>
 <li><p>With <code>pluck()</code> &amp; <code>pull()</code>: use the
 <code><a href="https://purrr.tidyverse.org/reference/pluck.html" class="external-link">purrr::pluck</a></code> function to select a list and then the
 <code><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">dplyr::pull</a></code> function extract values from a specified
-column,
-e.g. <code>results_pm_copd |&gt; purrr::pluck("health_main") |&gt; dplyr::pull("impact_rounded")</code></p></li>
+column, e.g.
+<code>results_pm_copd |&gt; purrr::pluck("health_main") |&gt; dplyr::pull("impact_rounded")</code></p></li>
 </ul>
 <hr>
 </div>
@@ -302,6 +319,9 @@ instead and is therefore only equivalent when
 <p>If there is one single exposure value, corresponding to the
 population weighted mean concentration, the equation can be simplified
 as follows:</p>
+<p>If there is one single single exposure value, corresponding to the
+population weighted mean concentration, the equation can be simplified
+as follows:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>A</mi><mi>F</mi><mo>=</mo><mfrac><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi><mo>−</mo><mn>1</mn></mrow><mrow><mi>r</mi><mi>r</mi><mi>_</mi><mi>a</mi><mi>t</mi><mi>_</mi><mi>e</mi><mi>x</mi><mi>p</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">PAF = \frac{rr\_at\_exp - 1}{rr\_at\_exp }</annotation></semantics></math>
 #### Scaling relative risk How to get this relative risk at exposure
 level (<code>rr_at_exp</code>)? This is normally different to the
@@ -324,6 +344,11 @@ exposure-response function shapes:</p>
 of the output of <code><a href="../reference/attribute_health.html">attribute_health()</a></code> and
 <code><a href="../reference/attribute_lifetable.html">attribute_lifetable()</a></code>. <code>rr_at_exp</code> can also be
 calculated using <code><a href="../reference/get_risk.html">get_risk()</a></code>.</p>
+<p>For conversion of hazard ratios and/or odds ratios to relative risks
+refer to <span class="citation">(VanderWeele 2019)</span> and/or use the
+conversion tools developed by the Teaching group in EBM in 2022 for
+hazard ratios (<a href="https://ebm-helper.cn/en/Conv/HR_RR.html" class="external-link uri">https://ebm-helper.cn/en/Conv/HR_RR.html</a>) and/or odds
+ratios (<a href="https://ebm-helper.cn/en/Conv/OR_RR.html" class="external-link uri">https://ebm-helper.cn/en/Conv/OR_RR.html</a>).</p>
 <p>For conversion of hazard ratios and/or odds ratios to relative risks
 refer to <span class="citation">(VanderWeele 2019)</span> and/or use the
 conversion tools developed by the Teaching group in EBM in 2022 for
@@ -429,6 +454,9 @@ health data.</p>
 <p>In the absolute risk calculation pathway, estimates are based on the
 size and distribution of the exposed population, rather than on baseline
 health data, as is the case in the relative risk pathway <span class="citation">(WHO 2011)</span>.</p>
+<p>In the absolute risk calculation pathway, estimates are based on the
+size and distribution of the exposed population, rather than on baseline
+health data, as is the case in the relative risk pathway <span class="citation">(WHO 2011)</span>.</p>
 <div class="float">
 <img src="../reference/figures/bod_ar.png" width="700" alt="Figure: Absolute risk approach"><div class="figcaption">Figure: Absolute risk approach</div>
 </div>
@@ -444,6 +472,9 @@ obtained from the exposure-response function entered in
 <code>erf_eq_...</code></p></li>
 <li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>o</mi><mi>p</mi><mi>_</mi><mi>e</mi><mi>x</mi><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">pop\_exp_i</annotation></semantics></math>
 = absolute population exposed at exposure category
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math></p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><msub><mi>E</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">PE_i</annotation></semantics></math>
+= absolute population exposed at category
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math></p></li>
 </ul>
 <p><em>healthiar</em> consistently handles cut-off values across both
@@ -993,6 +1024,14 @@ instead the central, lower and upper estimates of each lower level unit
 would assume that the uncertainty is perfectly correlated across the
 units and would therefore overestimate the width of the confidence
 interval.</p>
+<p>For each entered input argument that includes a (95%) confidence
+interval (i.e. <code>_lower</code> and <code>_upper</code> bound value)
+a distribution is fitted (see distributions below). The median of the
+simulated attributable impacts is reported as the central estimate. The
+2.5th and 97.5th percentiles of these simulated impacts define the lower
+and upper bounds of the 95% summary uncertainty interval. Aggregated
+central, lower and upper estimates are obtained by summing the
+corresponding values of each lower level unit.</p>
 </div>
 <div class="section level5">
 <h5 id="distributions-used-for-simulation">Distributions used for simulation<a class="anchor" aria-label="anchor" href="#distributions-used-for-simulation"></a>
@@ -1500,6 +1539,10 @@ used to create the ERF</p>
 </div>
 <div class="section level2">
 <h2 id="sub-group-analysis">Sub-group analysis<a class="anchor" aria-label="anchor" href="#sub-group-analysis"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="sub-group-analysis-1">Sub-group analysis<a class="anchor" aria-label="anchor" href="#sub-group-analysis-1"></a>
 </h2>
 <p>Every sub-group stratifies the assessment: by age group, by sex, or
 by anything entered in <code>info</code>, such as education level. What
@@ -2133,10 +2176,10 @@ follows that of the WHO tool AirQ+ <span class="citation">(WHO
 formulas, which do not assume a fixed fraction of life lived
 (fraction_lived = 0.5), are based on the foundational work by <span class="citation">Chiang (1984)</span>. In short, two scenarios are
 compared:</p>
+<p>In short, two scenarios are compared:</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>a scenario with the exposure level specified in the function
-(“exposed scenario”) and</p></li>
-<li><p>a scenario with no exposure (“unexposed scenario”).</p></li>
+<li>a scenario with the exposure level specified in the function
+(“exposed scenario”) and</li>
 </ol>
 <p>First, the entry and mid-year populations of the (first) year of
 analysis in the unexposed scenario are determined using modified
@@ -2295,6 +2338,8 @@ as follows:</p>
 </h6>
 <p>The mid-year population of the (first) year of analysis (year_1) in
 the unexposed scenario are determined as follows:</p>
+<p>The mid-year populatios of the (first) year of analysis (year_1) in
+the unexposed scenario are determined as follows:</p>
 <p>First, the survival probabilities from start of year
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
 to mid-year
@@ -2321,6 +2366,12 @@ under each scenario are calculated.</p>
 case of <code>"single_year"</code> exposure, the population projection
 for the years after the year of exposure uses the same (modified)
 survival probabilities as the unexposed scenario.</p>
+<p>The population projections for the two possible options of
+<code>approach_exposure</code> (<code>"single_year"</code> and
+<code>"constant"</code>) for the unexposed scenario are different. In
+the case of <code>"single_year"</code> exposure, the population
+projection for the years after the year of exposure is the same as in
+the unexposed scenario.</p>
 <p>In the case of <code>"constant"</code> the population projection is
 done as follows:</p>
 <p>First, the entry population of year
@@ -3273,6 +3324,9 @@ for Europe 2014)</span></p></li>
 <li><p>Population impact fraction (PIF) <span class="citation">(WHO
 2003; C. J. L. Murray et al. 2003; Askari and Namayandeh
 2020)</span>.</p></li>
+<li><p>Population impact fraction (PIF) <span class="citation">(WHO
+2003; C. J. L. Murray et al. 2003; Askari and Namayandeh
+2020)</span>.</p></li>
 </ul>
 <p>Note that the PIF comparison approach assumes same baseline health
 data for scenario 1 and 2 (e.g., comparison of two scenarios at the same
@@ -3476,10 +3530,6 @@ analysis</em> and therefore <em>same health baseline data</em> in both
 scenarios. The only variable that should change in the second scenario
 is the exposure (change as a result of the intervention).</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="two-correlated-exposures">Two correlated exposures<a class="anchor" aria-label="anchor" href="#two-correlated-exposures"></a>
-</h2>
 <div class="section level4">
 <h4 id="goal-19">Goal<a class="anchor" aria-label="anchor" href="#goal-19"></a>
 </h4>
@@ -4013,6 +4063,39 @@ increases. An alternative is hyperbolic discounting, which tends to
 better capture human behavior by discounting the near present more
 heavily than outcomes further in the future <span class="citation">(Lipman and Attema 2024)</span></p>
 <p>See below the equations that are used behind these functions.</p>
+<p>In health economic evaluations and economic burden of disease
+assessments, health impacts may need to be converted into monetary
+values. For this purpose, you can use <code><a href="../reference/monetize.html">monetize()</a></code>.</p>
+<p>Several valuation metrics are available, depending on how outcomes
+are quantified in natural or health units (e.g. cases reduced, deaths
+prevented, reductions in mortality risk, life-years gained, QALYs
+gained, DALYs averted). Common metrics include the Value of a
+Statistical Life (VSL) <span class="citation">(OECD 2025)</span> , the
+Value of a Life-Year (VOLY) <span class="citation">(Hammitt 2007)</span>
+and the Value of a Quality-Adjusted Life-Year (VAQALY) <span class="citation">(Bobinac et al. 2010)</span>.</p>
+<p>Discounting is the practice of converting future costs (or health
+impacts as previous step to valuating them) into their present value.
+The underlying rationale is that the value placed on outcomes declines
+as they occur further in the future. Therefore, future costs and effects
+are converted into present-value terms to make them comparable over time
+<span class="citation">(Attema et al. 2018)</span>.</p>
+<p>Discounting is implemented by selecting a discount rate, which is
+used to compute a discount factor for each time period. This factor is
+then multiplied by the corresponding future cost (or effect) to express
+it in present-value terms.</p>
+<p>If you need the discounted values of a cost or health outcome, you
+can call the <code>healthiar</code> function <code><a href="../reference/discount.html">discount()</a></code>. If
+you just need the discount factor, you can alternatively call
+<code><a href="../reference/get_discount_factor.html">get_discount_factor()</a></code> (entering
+<code>is_deflation = TRUE</code>). If you just need the inflation
+factor, you can <code><a href="../reference/get_inflation_factor.html">get_inflation_factor()</a></code>.</p>
+<p>Different functional forms can be used to apply discounting. The most
+common is exponential discounting, also referred to as constant
+discounting, since outcomes are discounted proportionally as time
+increases. An alternative is hyperbolic discounting, which tends to
+better capture human behavior by discounting the near present more
+heavily than outcomes further in the future <span class="citation">(Lipman and Attema 2024)</span></p>
+<p>See below the equations that are used behind these functions.</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mi>o</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi>i</mi><mi>z</mi><mi>e</mi><mi>d</mi><mi>_</mi><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mo>=</mo><mi>i</mi><mi>m</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>t</mi><mo>×</mo><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>×</mo><mi>d</mi><mi>i</mi><mi>s</mi><mi>c</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>t</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>×</mo><mi>d</mi><mi>e</mi><mi>f</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi><mo>×</mo><mi>r</mi><mi>e</mi><mi>a</mi><mi>l</mi><mi>_</mi><mi>g</mi><mi>r</mi><mi>o</mi><mi>w</mi><mi>t</mi><mi>h</mi><mi>_</mi><mi>f</mi><mi>a</mi><mi>c</mi><mi>t</mi><mi>o</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">monetized\_impact = impact \times valuation \times discount\_factor \times deflator\_factor \times real\_growth\_factor</annotation></semantics></math>
 The arguments <code>discount_factor</code>, <code>deflator_factor</code>
 and <code>real_growth_factor</code> are only used if a value is entered
@@ -4057,10 +4140,6 @@ factors</p>
 <div class="section level5">
 <h5 id="real-valuation-growth">Real valuation growth<a class="anchor" aria-label="anchor" href="#real-valuation-growth"></a>
 </h5>
-<p>If a rising societal value of health over time is required in the
-monetization, unlike inflation, this represents a “real” increase in
-value. Thus, as societies become wealthier, their willingness to pay to
-avoid mortality and morbidity risks tends to rise <span class="citation">(OECD 2012)</span>.</p>
 <p>For this use case, you have to enter a value in the argument
 <code>real_growth_rate</code> in <code><a href="../reference/monetize.html">monetize()</a></code>, which allows
 you to project this growth by applying a valuation growth factor to
@@ -4346,6 +4425,8 @@ We can find out using the <em>healthiar</em> function
 </h5>
 <p>The outcome of the CBA is contained in two folders, which are added
 to the existing assessment:</p>
+<p>The outcome of the CBA is contained in two folders, which are added
+to the existing assessment:</p>
 <ul>
 <li><p><code>cba_main</code> contains the central estimate and the
 corresponding 95% confidence intervals obtained</p></li>
@@ -4463,6 +4544,11 @@ Where:</p>
 </ul>
 <p>If you assume that the least deprived areas are similar to
 counterfactual cases (no exposure to deprivation), the relative
+difference regarding the overall average health impact could be
+interpreted as some kind of relative risk attributable to social
+inequalities.</p>
+<p>If you assume that the least deprived areas are similar to
+counter-factual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.</p>
@@ -4586,6 +4672,12 @@ trends if prior years’ data is complete.</p></li>
 <li><p>Indicator-Based Imputation: Multiple linear regression if the
 missing indicator correlates strongly with others.</p></li>
 </ul>
+<p>To apply this approach, you should ensure that the data set is as
+complete as possible. Otherwise, you can try to impute missing data
+using: - Time-Based Imputation: Linear regression based on historical
+trends if prior years’ data is complete. - Indicator-Based Imputation:
+Multiple linear regression if the missing indicator correlates strongly
+with others.</p>
 <p>Imputation models should have an R^2 greater than or equal to 0.7. If
 R^2 lower than 0.7, consider alternative data sources or methods.</p>
 </div>
@@ -4757,6 +4849,10 @@ Analogously, to reproduce the histogram run</p>
 <div class="section level3">
 <h3 id="pipe-1">Pipe %&gt;%<a class="anchor" aria-label="anchor" href="#pipe-1"></a>
 </h3>
+</div>
+<div class="section level3">
+<h3 id="pipe-2">Pipe %&gt;%<a class="anchor" aria-label="anchor" href="#pipe-2"></a>
+</h3>
 <p><em>healthiar</em> can also be used inside <em>magrittr</em> pipes
 <code>%&gt;%</code> as follows.</p>
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
@@ -4803,6 +4899,241 @@ visualize in:</p>
 <li>Excel (export results first) or</li>
 <li>Other tools.</li>
 </ul>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="python-package">Python package<a class="anchor" aria-label="anchor" href="#python-package"></a>
+</h2>
+<p>Using <code>healthiar</code> in Python is possible with the dedicated
+wrapper. The wrapper consists of a Python program that allows you to use
+the <code>healthiar</code> R package as if it were a Python package. In
+technical terms, the Python package works by running R embedded in a
+Python process.</p>
+<p>The Python wrapper for <code>healthiar</code> is an implementation of
+the <a href="https://rpy2.github.io/" class="external-link"><code>rpy2</code>
+interface</a>.</p>
+<div class="section level3">
+<h3 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
+</h3>
+<p>To use the Python package, you need R, with the
+<code>healthiar</code> package installed.</p>
+</div>
+<div class="section level3">
+<h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>
+<p>Install the <code>healthiar</code> Python package with
+<code>pip</code>:</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" tabindex="-1"></a>pip install healthiar</span></code></pre></div>
+</li>
+<li>
+<p>Add the path of your R installation as environment variable. In
+Python, you can do this as follows:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb91-2"><a href="#cb91-2" tabindex="-1"></a></span>
+<span id="cb91-3"><a href="#cb91-3" tabindex="-1"></a>os.environ[<span class="st">'R_HOME'</span>] <span class="op">=</span> <span class="st">"/path/to/R/R-4.6.0"</span></span>
+<span id="cb91-4"><a href="#cb91-4" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb91-5"><a href="#cb91-5" tabindex="-1"></a>os.environ[<span class="st">"PATH"</span>] <span class="op">=</span> <span class="st">"/path/to/R/R-4.6.0/bin/x64"</span></span></code></pre></div>
+</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="modules">Modules<a class="anchor" aria-label="anchor" href="#modules"></a>
+</h3>
+<div class="section level4">
+<h4 id="conversion">Conversion<a class="anchor" aria-label="anchor" href="#conversion"></a>
+</h4>
+<p>The <code>conversion</code> module contains the functions for
+converting input and output data, needed for a correct functioning of
+the wrapper:</p>
+<ul>
+<li><p><code>py_to_r()</code>: To convert Python input data to the
+<code>rpy2</code> format;</p></li>
+<li><p><code>r_to_py()</code>: To convert the <code>rpy2</code> output
+back to Python.</p></li>
+</ul>
+<p>In some cases (e.g., floats and strings) the conversion from Python
+to <code>rpy2</code> object happens automatically. In other cases (e.g.,
+tuples and lists) the conversion needs to be made explicit through a
+call to <code>py_to_r()</code>. The table below gives the R object class
+corresponding to each relevant Python class, and indicates when to use
+the conversion function.</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th>Python type</th>
+<th>R class</th>
+<th>Conversion</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>int</code></td>
+<td><code>integer</code></td>
+<td><em>automatic</em></td>
+</tr>
+<tr class="even">
+<td><code>float</code></td>
+<td><code>double</code></td>
+<td><em>automatic</em></td>
+</tr>
+<tr class="odd">
+<td><code>str</code></td>
+<td><code>character</code></td>
+<td><em>automatic</em></td>
+</tr>
+<tr class="even">
+<td>
+<code>tuple</code>, <code>list</code>
+</td>
+<td><code>vector</code></td>
+<td><code>py_to_r()</code></td>
+</tr>
+<tr class="odd">
+<td>
+<code>pandas.DataFrame</code>, <code>pandas.Series</code>,
+<code>numpy.ndarray</code>
+</td>
+<td><code>data.frame</code></td>
+<td><code>py_to_r()</code></td>
+</tr>
+<tr class="even">
+<td><code>function</code></td>
+<td><code>function</code></td>
+<td><em>use a decorator (see below)</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="wrapper">Wrapper<a class="anchor" aria-label="anchor" href="#wrapper"></a>
+</h4>
+<p>The <code>healthiar</code> module contains the wrapper itself,
+allowing you to call any function available in the R package. To
+illustrate a typical workflow, let’s replicate the above example of a
+call to <code><a href="../reference/attribute_health.html">attribute_health()</a></code> for multiple geographic
+units:</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" tabindex="-1"></a><span class="im">from</span> healthiar.healthiar <span class="im">import</span> healthiar</span>
+<span id="cb92-2"><a href="#cb92-2" tabindex="-1"></a><span class="im">from</span> healthiar.conversion <span class="im">import</span> py_to_r, r_to_py</span>
+<span id="cb92-3"><a href="#cb92-3" tabindex="-1"></a></span>
+<span id="cb92-4"><a href="#cb92-4" tabindex="-1"></a>results_iteration <span class="op">=</span> healthiar.attribute_health(</span>
+<span id="cb92-5"><a href="#cb92-5" tabindex="-1"></a>    <span class="co"># Names of Swiss cantons</span></span>
+<span id="cb92-6"><a href="#cb92-6" tabindex="-1"></a>    geo_id_micro <span class="op">=</span> py_to_r([<span class="st">"Zurich"</span>, <span class="st">"Basel"</span>, <span class="st">"Geneva"</span>, <span class="st">"Ticino"</span>, <span class="st">"Jura"</span>]),</span>
+<span id="cb92-7"><a href="#cb92-7" tabindex="-1"></a>    <span class="co"># Names of languages spoken in the selected Swiss cantons</span></span>
+<span id="cb92-8"><a href="#cb92-8" tabindex="-1"></a>    geo_id_macro <span class="op">=</span> py_to_r([<span class="st">"German"</span>,<span class="st">"German"</span>,<span class="st">"French"</span>,<span class="st">"Italian"</span>,<span class="st">"French"</span>]),</span>
+<span id="cb92-9"><a href="#cb92-9" tabindex="-1"></a>    rr_central <span class="op">=</span> <span class="fl">1.369</span>,</span>
+<span id="cb92-10"><a href="#cb92-10" tabindex="-1"></a>    rr_increment <span class="op">=</span> <span class="dv">10</span>, </span>
+<span id="cb92-11"><a href="#cb92-11" tabindex="-1"></a>    cutoff_central <span class="op">=</span> <span class="dv">5</span>,</span>
+<span id="cb92-12"><a href="#cb92-12" tabindex="-1"></a>    erf_shape <span class="op">=</span> <span class="st">"log_linear"</span>,</span>
+<span id="cb92-13"><a href="#cb92-13" tabindex="-1"></a>    exp_central <span class="op">=</span> py_to_r([<span class="dv">11</span>, <span class="dv">11</span>, <span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">7</span>]),</span>
+<span id="cb92-14"><a href="#cb92-14" tabindex="-1"></a>    bhd_central <span class="op">=</span> py_to_r([<span class="dv">4000</span>, <span class="dv">2500</span>, <span class="dv">3000</span>, <span class="dv">1500</span>, <span class="dv">500</span>])</span>
+<span id="cb92-15"><a href="#cb92-15" tabindex="-1"></a>)</span></code></pre></div>
+<p>The output is an <code>rpy2</code> object. The result in this format
+can be passed directly to another <code>healthiar</code> function, such
+as <code><a href="../reference/compare.html">compare()</a></code>. To convert the result to a regular Python
+object, pass it to the <code>r_to_py()</code> function:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" tabindex="-1"></a>py_results_iteration <span class="op">=</span> r_to_py(results_iteration)</span>
+<span id="cb93-2"><a href="#cb93-2" tabindex="-1"></a>py_results_iteration[<span class="st">"health_main"</span>][[<span class="st">"geo_id_macro"</span>, <span class="st">"impact_rounded"</span>, <span class="st">"erf_ci"</span>, <span class="st">"exp_ci"</span>, <span class="st">"bhd_ci"</span>]].head()</span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th>geo_id_macro</th>
+<th>impact_rounded</th>
+<th>erf_ci</th>
+<th>exp_ci</th>
+<th>bhd_ci</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>German</td>
+<td>1116.0</td>
+<td>central</td>
+<td>central</td>
+<td>central</td>
+</tr>
+<tr class="even">
+<td>French</td>
+<td>466.0</td>
+<td>central</td>
+<td>central</td>
+<td>central</td>
+</tr>
+<tr class="odd">
+<td>Italian</td>
+<td>135.0</td>
+<td>central</td>
+<td>central</td>
+<td>central</td>
+</tr>
+</tbody>
+</table>
+<p>To pass a Python function as input to a function from
+<code>healthiar</code>, you need to wrap the <code>rpy2</code> function
+<code>rternalize()</code> around it using a decorator. Let’s take the
+<code>CubicSpline()</code> function from <code>scipy</code> as an
+example:</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" tabindex="-1"></a><span class="im">import</span> rpy2.rinterface <span class="im">as</span> ri</span>
+<span id="cb94-2"><a href="#cb94-2" tabindex="-1"></a><span class="im">from</span> scipy.interpolate <span class="im">import</span> CubicSpline</span>
+<span id="cb94-3"><a href="#cb94-3" tabindex="-1"></a></span>
+<span id="cb94-4"><a href="#cb94-4" tabindex="-1"></a><span class="co">## define ERF with decorator ('@')</span></span>
+<span id="cb94-5"><a href="#cb94-5" tabindex="-1"></a><span class="at">@ri.rternalize</span></span>
+<span id="cb94-6"><a href="#cb94-6" tabindex="-1"></a><span class="kw">def</span> erf_fun(x):</span>
+<span id="cb94-7"><a href="#cb94-7" tabindex="-1"></a>    cs <span class="op">=</span> CubicSpline(</span>
+<span id="cb94-8"><a href="#cb94-8" tabindex="-1"></a>      x <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">70</span>, <span class="dv">90</span>, <span class="dv">110</span>],</span>
+<span id="cb94-9"><a href="#cb94-9" tabindex="-1"></a>      y <span class="op">=</span> [<span class="fl">1.00</span>, <span class="fl">1.04</span>, <span class="fl">1.08</span>, <span class="fl">1.12</span>, <span class="fl">1.16</span>, <span class="fl">1.20</span>, <span class="fl">1.23</span>, <span class="fl">1.35</span>, <span class="fl">1.45</span>, <span class="fl">1.53</span>, <span class="fl">1.60</span>]</span>
+<span id="cb94-10"><a href="#cb94-10" tabindex="-1"></a>    )</span>
+<span id="cb94-11"><a href="#cb94-11" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">float</span>(cs(x)[<span class="dv">0</span>])</span>
+<span id="cb94-12"><a href="#cb94-12" tabindex="-1"></a></span>
+<span id="cb94-13"><a href="#cb94-13" tabindex="-1"></a><span class="co">## pass ERF to attribute_health()</span></span>
+<span id="cb94-14"><a href="#cb94-14" tabindex="-1"></a>results_pm_copd_mr_brt <span class="op">=</span> healthiar.attribute_health(</span>
+<span id="cb94-15"><a href="#cb94-15" tabindex="-1"></a>  exp_central <span class="op">=</span> <span class="fl">8.85</span>,</span>
+<span id="cb94-16"><a href="#cb94-16" tabindex="-1"></a>  bhd_central <span class="op">=</span> <span class="dv">30747</span>,</span>
+<span id="cb94-17"><a href="#cb94-17" tabindex="-1"></a>  cutoff_central <span class="op">=</span> <span class="dv">0</span>,</span>
+<span id="cb94-18"><a href="#cb94-18" tabindex="-1"></a>  erf_eq_central <span class="op">=</span> erf_fun</span>
+<span id="cb94-19"><a href="#cb94-19" tabindex="-1"></a>)</span></code></pre></div>
+<p>Note: The use of a decorator is only required when passing Python
+functions as <code>erf_eq_central</code>. Passing equations in the form
+of a string requires no conversion.</p>
+</div>
+<div class="section level4">
+<h4 id="spatial-data">Spatial data<a class="anchor" aria-label="anchor" href="#spatial-data"></a>
+</h4>
+<p>Conversion of spatial data formats from Python (e.g.,
+<code>geopandas</code>, <code>xarray</code>) to <code>rpy2</code> format
+is not possible. However, the module <code>spatial</code> contains
+functions to read geographic vector or raster data in way that is
+compatible with the <code>healthiar</code> function
+<code><a href="../reference/prepare_exposure.html">prepare_exposure()</a></code>:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" tabindex="-1"></a><span class="im">from</span> healthiar.spatial <span class="im">import</span> read_raster, read_vector</span>
+<span id="cb95-2"><a href="#cb95-2" tabindex="-1"></a><span class="im">from</span> importlib.resources <span class="im">import</span> files <span class="co"># to access package data files</span></span>
+<span id="cb95-3"><a href="#cb95-3" tabindex="-1"></a><span class="im">import</span> pathlib <span class="co"># to convert Windows path to POSIX path, if running Windows</span></span>
+<span id="cb95-4"><a href="#cb95-4" tabindex="-1"></a></span>
+<span id="cb95-5"><a href="#cb95-5" tabindex="-1"></a>path <span class="op">=</span> files(<span class="st">"healthiar.data"</span>)</span>
+<span id="cb95-6"><a href="#cb95-6" tabindex="-1"></a>exdat_pwm_1 <span class="op">=</span> read_raster(path.joinpath(<span class="st">"pm25.tif"</span>).as_posix())</span>
+<span id="cb95-7"><a href="#cb95-7" tabindex="-1"></a>exdat_pwm_2 <span class="op">=</span> read_vector(path.joinpath(<span class="st">"municipalities_brussels.gpkg"</span>).as_posix(), quiet <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb95-8"><a href="#cb95-8" tabindex="-1"></a></span>
+<span id="cb95-9"><a href="#cb95-9" tabindex="-1"></a>population <span class="op">=</span> [<span class="dv">27335</span>, <span class="dv">131426</span>, <span class="dv">86534</span>, <span class="dv">25425</span>, <span class="dv">59840</span>, <span class="dv">42638</span>, <span class="dv">125734</span>, <span class="dv">35369</span>, <span class="dv">203105</span>, <span class="dv">50060</span>, <span class="dv">44735</span>, <span class="dv">57993</span>, <span class="dv">89204</span>, <span class="dv">54077</span>, <span class="dv">22901</span>, <span class="dv">99096</span>, <span class="dv">25630</span>, <span class="dv">49704</span>, <span class="dv">25441</span>]</span>
+<span id="cb95-10"><a href="#cb95-10" tabindex="-1"></a></span>
+<span id="cb95-11"><a href="#cb95-11" tabindex="-1"></a>geo_id_macro <span class="op">=</span> [<span class="st">"North"</span>, <span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"East"</span>, <span class="st">"East"</span>, <span class="st">"West"</span>, <span class="st">"East"</span>, <span class="st">"Center"</span>, <span class="st">"East"</span>, <span class="st">"North"</span>, <span class="st">"South"</span>, <span class="st">"South"</span>, <span class="st">"North"</span>, <span class="st">"West"</span>, <span class="st">"West"</span>, <span class="st">"West"</span>, <span class="st">"South"</span>, <span class="st">"West"</span>]</span>
+<span id="cb95-12"><a href="#cb95-12" tabindex="-1"></a></span>
+<span id="cb95-13"><a href="#cb95-13" tabindex="-1"></a>pwm <span class="op">=</span> healthiar.prepare_exposure(</span>
+<span id="cb95-14"><a href="#cb95-14" tabindex="-1"></a>  poll_grid <span class="op">=</span> exdat_pwm_1, <span class="co"># Formal class SpatRaster,</span></span>
+<span id="cb95-15"><a href="#cb95-15" tabindex="-1"></a>  geo_units <span class="op">=</span> exdat_pwm_2, <span class="co"># sf of the geographic sub-units</span></span>
+<span id="cb95-16"><a href="#cb95-16" tabindex="-1"></a>  population <span class="op">=</span> py_to_r(population), <span class="co"># population per geographic sub-unit</span></span>
+<span id="cb95-17"><a href="#cb95-17" tabindex="-1"></a>  geo_id_macro <span class="op">=</span> py_to_r(geo_id_macro)</span>
+<span id="cb95-18"><a href="#cb95-18" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h3>
+<p>To access the documentation of a <code>healthiar</code> function, use
+the default <code>?</code> method from R:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" tabindex="-1"></a>?healthiar.attribute_health</span></code></pre></div>
 <hr>
 </div>
 </div>
@@ -4963,10 +5294,6 @@ Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. <span>“Comparative Risk Assessment:
 Conceptual Framework and Design.”</span> <em>Epidemiology</em> 14 (4):
 447–58. <a href="https://doi.org/10.1186/1478-7954-1-1" class="external-link">https://doi.org/10.1186/1478-7954-1-1</a>.
-</div>
-<div id="ref-OECD2012_book" class="csl-entry">
-OECD. 2012. <em>Mortality Risk Valuation in Environment, Health and
-Transport Policies</em>. OECD Publishing. <a href="https://doi.org/10.1787/9789264130807-en" class="external-link">https://doi.org/10.1787/9789264130807-en</a>.
 </div>
 <div id="ref-OECD2025_book" class="csl-entry">
 OECD. 2025. <em>Mortality Risk Valuation in Policy Assessment: A Global

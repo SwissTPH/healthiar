@@ -18,6 +18,13 @@ or the [package website](https://swisstph.github.io/healthiar/). By
 using *healthiar*, you agree to its [disclaimer and
 license](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#disclaimer-and-license).
 
+*NOTE*: Before using `healthiar`, please read carefully the information
+provided in the [readme
+file](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme)
+or the [welcome webpage](https://swisstph.github.io/healthiar/). By
+using `healthiar`, you agree to the [terms of use and
+disclaimer](https://github.com/SwissTPH/healthiar?tab=readme-ov-file#readme).
+
 ------------------------------------------------------------------------
 
 ## About *healthiar*
@@ -33,6 +40,13 @@ See below an overview of *healthiar*, which is the first page of the
 [cheat
 sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html).
 The whole list of functions included in *healthiar* is linked there and
+available in the
+[reference](https://swisstph.github.io/healthiar/reference/index.html).
+
+See below a an overview of the `healthiar`, which is the first page of
+the [cheat
+sheet](https://swisstph.github.io/healthiar/articles/cheatsheet.html).
+The whole list of functions included in `healthiar` is linked there and
 available in the
 [reference](https://swisstph.github.io/healthiar/reference/index.html).
 
@@ -148,6 +162,11 @@ but using different prefixes. E.g., `social_` in
 and `monetization_` in
 [`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
 
+In other `healthiar` functions you can find a similar output structure
+but using different prefixes. E.g., `social_`in
+[`socialize()`](https://swisstph.github.io/healthiar/reference/socialize.md)
+and `monetization_`in `monetitize()`.
+
 ##### Access
 
 A similar structure can be found in other large functions in
@@ -171,14 +190,18 @@ There exist different, equivalent ways of accessing the output:
   (e.g. *Environment* in RStudio), click on the variable you want to
   inspect, and then open the `health_main` results table
 
+- By mouse: go to the *Environment* tab in RStudio and click on the
+  variable you want to inspect, and then open the `health_main` results
+  table
+
 - With `[[]]` operator `results_pm_copd[["health_main"]]`
 
 - With `pluck()` & `pull()`: use the
   [`purrr::pluck`](https://purrr.tidyverse.org/reference/pluck.html)
   function to select a list and then the
   [`dplyr::pull`](https://dplyr.tidyverse.org/reference/pull.html)
-  function extract values from a specified column,
-  e.g. `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
+  function extract values from a specified column, e.g.
+  `results_pm_copd |> purrr::pluck("health_main") |> dplyr::pull("impact_rounded")`
 
 ------------------------------------------------------------------------
 
@@ -257,6 +280,10 @@ only equivalent when $`\sum prop\_pop\_exp_i = 1`$.
 If there is one single exposure value, corresponding to the population
 weighted mean concentration, the equation can be simplified as follows:
 
+If there is one single single exposure value, corresponding to the
+population weighted mean concentration, the equation can be simplified
+as follows:
+
 ``` math
 PAF = \frac{rr\_at\_exp - 1}{rr\_at\_exp }
 ```
@@ -294,6 +321,12 @@ and
 [`attribute_lifetable()`](https://swisstph.github.io/healthiar/reference/attribute_lifetable.md).
 `rr_at_exp` can also be calculated using
 [`get_risk()`](https://swisstph.github.io/healthiar/reference/get_risk.md).
+
+For conversion of hazard ratios and/or odds ratios to relative risks
+refer to (VanderWeele 2019) and/or use the conversion tools developed by
+the Teaching group in EBM in 2022 for hazard ratios
+(<https://ebm-helper.cn/en/Conv/HR_RR.html>) and/or odds ratios
+(<https://ebm-helper.cn/en/Conv/OR_RR.html>).
 
 For conversion of hazard ratios and/or odds ratios to relative risks
 refer to (VanderWeele 2019) and/or use the conversion tools developed by
@@ -382,6 +415,10 @@ In the absolute risk calculation pathway, estimates are based on the
 size and distribution of the exposed population, rather than on baseline
 health data, as is the case in the relative risk pathway (WHO 2011).
 
+In the absolute risk calculation pathway, estimates are based on the
+size and distribution of the exposed population, rather than on baseline
+health data, as is the case in the relative risk pathway (WHO 2011).
+
 ![Figure: Absolute risk approach](../reference/figures/bod_ar.png)
 
 Figure: Absolute risk approach
@@ -400,6 +437,8 @@ Where:
 
 - $`pop\_exp_i`$ = absolute population exposed at exposure category
   $`i`$
+
+- $`PE_i`$ = absolute population exposed at category $`i`$
 
 *healthiar* consistently handles cut-off values across both relative and
 absolute risk approaches. When a `cutoff_` argument is specified
@@ -782,6 +821,15 @@ estimates of each lower level unit would assume that the uncertainty is
 perfectly correlated across the units and would therefore overestimate
 the width of the confidence interval.
 
+For each entered input argument that includes a (95%) confidence
+interval (i.e. `_lower` and `_upper` bound value) a distribution is
+fitted (see distributions below). The median of the simulated
+attributable impacts is reported as the central estimate. The 2.5th and
+97.5th percentiles of these simulated impacts define the lower and upper
+bounds of the 95% summary uncertainty interval. Aggregated central,
+lower and upper estimates are obtained by summing the corresponding
+values of each lower level unit.
+
 ##### Distributions used for simulation
 
 [`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
@@ -958,6 +1006,8 @@ curve](intro_to_healthiar_files/figure-html/unnamed-chunk-37-1.png)
 Alternatively, other functions
 (e.g. [`approxfun()`](https://rdrr.io/r/stats/approxfun.html)) can be
 used to create the ERF
+
+## Sub-group analysis
 
 ## Sub-group analysis
 
@@ -1558,10 +1608,10 @@ do not assume a fixed fraction of life lived (fraction_lived = 0.5), are
 based on the foundational work by Chiang (1984). In short, two scenarios
 are compared:
 
+In short, two scenarios are compared:
+
 1.  a scenario with the exposure level specified in the function
     (“exposed scenario”) and
-
-2.  a scenario with no exposure (“unexposed scenario”).
 
 First, the entry and mid-year populations of the (first) year of
 analysis in the unexposed scenario are determined using modified
@@ -1728,6 +1778,9 @@ prob\_survival\_mod = \frac{1 - fraction\_lived \times hazard\_rate\_mod}{1 + (1
 The mid-year population of the (first) year of analysis (year_1) in the
 unexposed scenario are determined as follows:
 
+The mid-year populatios of the (first) year of analysis (year_1) in the
+unexposed scenario are determined as follows:
+
 First, the survival probabilities from start of year $`i`$ to mid-year
 $`i`$ in the unexposed scenario is calculated as:
 
@@ -1755,6 +1808,12 @@ The population projections for the two possible options of
 scenario are different. In the case of `"single_year"` exposure, the
 population projection for the years after the year of exposure uses the
 same (modified) survival probabilities as the unexposed scenario.
+
+The population projections for the two possible options of
+`approach_exposure` (`"single_year"` and `"constant"`) for the unexposed
+scenario are different. In the case of `"single_year"` exposure, the
+population projection for the years after the year of exposure is the
+same as in the unexposed scenario.
 
 In the case of `"constant"` the population projection is done as
 follows:
@@ -2231,6 +2290,9 @@ Two approaches can be used for the comparison of scenarios:
 - Population impact fraction (PIF) (WHO 2003; C. J. L. Murray et al.
   2003; Askari and Namayandeh 2020).
 
+- Population impact fraction (PIF) (WHO 2003; C. J. L. Murray et al.
+  2003; Askari and Namayandeh 2020).
+
 Note that the PIF comparison approach assumes same baseline health data
 for scenario 1 and 2 (e.g., comparison of two scenarios at the same time
 point), while the delta comparison approach, the difference between two
@@ -2380,8 +2442,6 @@ intervention*, you should use the *same year of analysis* and therefore
 *same health baseline data* in both scenarios. The only variable that
 should change in the second scenario is the exposure (change as a result
 of the intervention).
-
-## Two correlated exposures
 
 #### Goal
 
@@ -2894,6 +2954,49 @@ heavily than outcomes further in the future (Lipman and Attema 2024)
 
 See below the equations that are used behind these functions.
 
+In health economic evaluations and economic burden of disease
+assessments, health impacts may need to be converted into monetary
+values. For this purpose, you can use
+[`monetize()`](https://swisstph.github.io/healthiar/reference/monetize.md).
+
+Several valuation metrics are available, depending on how outcomes are
+quantified in natural or health units (e.g. cases reduced, deaths
+prevented, reductions in mortality risk, life-years gained, QALYs
+gained, DALYs averted). Common metrics include the Value of a
+Statistical Life (VSL) (OECD 2025) , the Value of a Life-Year (VOLY)
+(Hammitt 2007) and the Value of a Quality-Adjusted Life-Year (VAQALY)
+(Bobinac et al. 2010).
+
+Discounting is the practice of converting future costs (or health
+impacts as previous step to valuating them) into their present value.
+The underlying rationale is that the value placed on outcomes declines
+as they occur further in the future. Therefore, future costs and effects
+are converted into present-value terms to make them comparable over time
+(Attema et al. 2018).
+
+Discounting is implemented by selecting a discount rate, which is used
+to compute a discount factor for each time period. This factor is then
+multiplied by the corresponding future cost (or effect) to express it in
+present-value terms.
+
+If you need the discounted values of a cost or health outcome, you can
+call the `healthiar` function
+[`discount()`](https://swisstph.github.io/healthiar/reference/discount.md).
+If you just need the discount factor, you can alternatively call
+[`get_discount_factor()`](https://swisstph.github.io/healthiar/reference/get_discount_factor.md)
+(entering `is_deflation = TRUE`). If you just need the inflation factor,
+you can
+[`get_inflation_factor()`](https://swisstph.github.io/healthiar/reference/get_inflation_factor.md).
+
+Different functional forms can be used to apply discounting. The most
+common is exponential discounting, also referred to as constant
+discounting, since outcomes are discounted proportionally as time
+increases. An alternative is hyperbolic discounting, which tends to
+better capture human behavior by discounting the near present more
+heavily than outcomes further in the future (Lipman and Attema 2024)
+
+See below the equations that are used behind these functions.
+
 ``` math
 monetized\_impact = impact \times valuation \times discount\_factor \times deflator\_factor \times real\_growth\_factor
 ```
@@ -2956,11 +3059,6 @@ deflator\_factor = \frac{1}{\prod_{t=1}^{n\_years}(1 + inflation\_rate_t)}
 ```
 
 ##### Real valuation growth
-
-If a rising societal value of health over time is required in the
-monetization, unlike inflation, this represents a “real” increase in
-value. Thus, as societies become wealthier, their willingness to pay to
-avoid mortality and morbidity risks tends to rise (OECD 2012).
 
 For this use case, you have to enter a value in the argument
 `real_growth_rate` in
@@ -3215,6 +3313,9 @@ cba <- cba(
 The outcome of the CBA is contained in two folders, which are added to
 the existing assessment:
 
+The outcome of the CBA is contained in two folders, which are added to
+the existing assessment:
+
 - `cba_main` contains the central estimate and the corresponding 95%
   confidence intervals obtained
 
@@ -3302,6 +3403,12 @@ Where:
 
 If you assume that the least deprived areas are similar to
 counterfactual cases (no exposure to deprivation), the relative
+difference regarding the overall average health impact could be
+interpreted as some kind of relative risk attributable to social
+inequalities.
+
+If you assume that the least deprived areas are similar to
+counter-factual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.
@@ -3428,6 +3535,13 @@ using:
 
 - Indicator-Based Imputation: Multiple linear regression if the missing
   indicator correlates strongly with others.
+
+To apply this approach, you should ensure that the data set is as
+complete as possible. Otherwise, you can try to impute missing data
+using: - Time-Based Imputation: Linear regression based on historical
+trends if prior years’ data is complete. - Indicator-Based Imputation:
+Multiple linear regression if the missing indicator correlates strongly
+with others.
 
 Imputation models should have an R^2 greater than or equal to 0.7. If
 R^2 lower than 0.7, consider alternative data sources or methods.
@@ -3570,6 +3684,8 @@ exdat_noise |>
 
 ### Pipe %\>%
 
+### Pipe %\>%
+
 *healthiar* can also be used inside *magrittr* pipes `%>%` as follows.
 
 ``` r
@@ -3623,6 +3739,182 @@ Visualization is out of scope of *healthiar*. You can visualize in:
 - R using base programming or packages such as `ggplot2` (Wickham 2016),
 - Excel (export results first) or
 - Other tools.
+
+------------------------------------------------------------------------
+
+## Python package
+
+Using `healthiar` in Python is possible with the dedicated wrapper. The
+wrapper consists of a Python program that allows you to use the
+`healthiar` R package as if it were a Python package. In technical
+terms, the Python package works by running R embedded in a Python
+process.
+
+The Python wrapper for `healthiar` is an implementation of the [`rpy2`
+interface](https://rpy2.github.io/).
+
+### Requirements
+
+To use the Python package, you need R, with the `healthiar` package
+installed.
+
+### Installation
+
+1.  Install the `healthiar` Python package with `pip`:
+
+    ``` python
+    pip install healthiar
+    ```
+
+2.  Add the path of your R installation as environment variable. In
+    Python, you can do this as follows:
+
+    ``` python
+    import os
+
+    os.environ['R_HOME'] = "/path/to/R/R-4.6.0"
+    # or
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    ```
+
+### Modules
+
+#### Conversion
+
+The `conversion` module contains the functions for converting input and
+output data, needed for a correct functioning of the wrapper:
+
+- `py_to_r()`: To convert Python input data to the `rpy2` format;
+
+- `r_to_py()`: To convert the `rpy2` output back to Python.
+
+In some cases (e.g., floats and strings) the conversion from Python to
+`rpy2` object happens automatically. In other cases (e.g., tuples and
+lists) the conversion needs to be made explicit through a call to
+`py_to_r()`. The table below gives the R object class corresponding to
+each relevant Python class, and indicates when to use the conversion
+function.
+
+| Python type | R class | Conversion |
+|----|----|----|
+| `int` | `integer` | *automatic* |
+| `float` | `double` | *automatic* |
+| `str` | `character` | *automatic* |
+| `tuple`, `list` | `vector` | `py_to_r()` |
+| `pandas.DataFrame`, `pandas.Series`, `numpy.ndarray` | `data.frame` | `py_to_r()` |
+| `function` | `function` | *use a decorator (see below)* |
+
+#### Wrapper
+
+The `healthiar` module contains the wrapper itself, allowing you to call
+any function available in the R package. To illustrate a typical
+workflow, let’s replicate the above example of a call to
+[`attribute_health()`](https://swisstph.github.io/healthiar/reference/attribute_health.md)
+for multiple geographic units:
+
+``` python
+from healthiar.healthiar import healthiar
+from healthiar.conversion import py_to_r, r_to_py
+
+results_iteration = healthiar.attribute_health(
+    # Names of Swiss cantons
+    geo_id_micro = py_to_r(["Zurich", "Basel", "Geneva", "Ticino", "Jura"]),
+    # Names of languages spoken in the selected Swiss cantons
+    geo_id_macro = py_to_r(["German","German","French","Italian","French"]),
+    rr_central = 1.369,
+    rr_increment = 10, 
+    cutoff_central = 5,
+    erf_shape = "log_linear",
+    exp_central = py_to_r([11, 11, 10, 8, 7]),
+    bhd_central = py_to_r([4000, 2500, 3000, 1500, 500])
+)
+```
+
+The output is an `rpy2` object. The result in this format can be passed
+directly to another `healthiar` function, such as
+[`compare()`](https://swisstph.github.io/healthiar/reference/compare.md).
+To convert the result to a regular Python object, pass it to the
+`r_to_py()` function:
+
+``` python
+py_results_iteration = r_to_py(results_iteration)
+py_results_iteration["health_main"][["geo_id_macro", "impact_rounded", "erf_ci", "exp_ci", "bhd_ci"]].head()
+```
+
+| geo_id_macro | impact_rounded | erf_ci  | exp_ci  | bhd_ci  |
+|--------------|----------------|---------|---------|---------|
+| German       | 1116.0         | central | central | central |
+| French       | 466.0          | central | central | central |
+| Italian      | 135.0          | central | central | central |
+
+To pass a Python function as input to a function from `healthiar`, you
+need to wrap the `rpy2` function `rternalize()` around it using a
+decorator. Let’s take the `CubicSpline()` function from `scipy` as an
+example:
+
+``` python
+import rpy2.rinterface as ri
+from scipy.interpolate import CubicSpline
+
+## define ERF with decorator ('@')
+@ri.rternalize
+def erf_fun(x):
+    cs = CubicSpline(
+      x = [0, 5, 10, 15, 20, 25, 30, 50, 70, 90, 110],
+      y = [1.00, 1.04, 1.08, 1.12, 1.16, 1.20, 1.23, 1.35, 1.45, 1.53, 1.60]
+    )
+    return float(cs(x)[0])
+
+## pass ERF to attribute_health()
+results_pm_copd_mr_brt = healthiar.attribute_health(
+  exp_central = 8.85,
+  bhd_central = 30747,
+  cutoff_central = 0,
+  erf_eq_central = erf_fun
+)
+```
+
+Note: The use of a decorator is only required when passing Python
+functions as `erf_eq_central`. Passing equations in the form of a string
+requires no conversion.
+
+#### Spatial data
+
+Conversion of spatial data formats from Python (e.g., `geopandas`,
+`xarray`) to `rpy2` format is not possible. However, the module
+`spatial` contains functions to read geographic vector or raster data in
+way that is compatible with the `healthiar` function
+[`prepare_exposure()`](https://swisstph.github.io/healthiar/reference/prepare_exposure.md):
+
+``` python
+from healthiar.spatial import read_raster, read_vector
+from importlib.resources import files # to access package data files
+import pathlib # to convert Windows path to POSIX path, if running Windows
+
+path = files("healthiar.data")
+exdat_pwm_1 = read_raster(path.joinpath("pm25.tif").as_posix())
+exdat_pwm_2 = read_vector(path.joinpath("municipalities_brussels.gpkg").as_posix(), quiet = True)
+
+population = [27335, 131426, 86534, 25425, 59840, 42638, 125734, 35369, 203105, 50060, 44735, 57993, 89204, 54077, 22901, 99096, 25630, 49704, 25441]
+
+geo_id_macro = ["North", "North", "South", "South", "East", "East", "West", "East", "Center", "East", "North", "South", "South", "North", "West", "West", "West", "South", "West"]
+
+pwm = healthiar.prepare_exposure(
+  poll_grid = exdat_pwm_1, # Formal class SpatRaster,
+  geo_units = exdat_pwm_2, # sf of the geographic sub-units
+  population = py_to_r(population), # population per geographic sub-unit
+  geo_id_macro = py_to_r(geo_id_macro)
+)
+```
+
+### Documentation
+
+To access the documentation of a `healthiar` function, use the default
+`?` method from R:
+
+``` python
+?healthiar.attribute_health
+```
 
 ------------------------------------------------------------------------
 
@@ -3772,10 +4064,6 @@ Murray, Christopher JL, Majid Ezzati, Alan D Lopez, Anthony Rodgers, and
 Stephen Vander Hoorn. 2003. “Comparative Risk Assessment: Conceptual
 Framework and Design.” *Epidemiology* 14 (4): 447–58.
 <https://doi.org/10.1186/1478-7954-1-1>.
-
-OECD. 2012. *Mortality Risk Valuation in Environment, Health and
-Transport Policies*. OECD Publishing.
-<https://doi.org/10.1787/9789264130807-en>.
 
 OECD. 2025. *Mortality Risk Valuation in Policy Assessment: A Global
 Meta-Analysis of Value of Statistical Life Studies*. OECD Publishing.
