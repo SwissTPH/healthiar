@@ -12,16 +12,19 @@ interface](https://rpy2.github.io/).
 
 ## Requirements
 
-To use the Python package, you need R, with the `healthiar` package
-installed. Click
+To use the Python package, you need Python (version 3.9 or newer) and R,
+with the `healthiar` package installed. Click
 [here](https://swisstph.github.io/healthiar/index.html#installation) for
 instructions on installing the R package.
 
 ## Installation
 
-1.  Install the `healthiar` Python wrapper package with `pip`:
+1.  Install the `healthiar` Python wrapper package from
+    [PyPI](https://pypi.org/project/healthiar/) with `pip`. Run this
+    command in a terminal (e.g., Windows PowerShell or the terminal of
+    your IDE), not in a Python console:
 
-    ``` python
+    ``` bash
     pip install healthiar
     ```
 
@@ -32,7 +35,7 @@ instructions on installing the R package.
 
     ``` python
     import os
-    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64" + os.pathsep + os.environ["PATH"]
     ```
 
 ## Modules
