@@ -34,7 +34,7 @@ To use this Python package, you need [R](https://www.r-project.org/), with the [
 
     ```console
     import os
-    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64"
+    os.environ["PATH"] = "/path/to/R/R-4.6.0/bin/x64" + os.pathsep + os.environ["PATH"]
     ```
 
 ## Documentation
