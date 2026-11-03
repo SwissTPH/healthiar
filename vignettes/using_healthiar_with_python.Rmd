@@ -15,8 +15,8 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo=TRUE, eval=FALSE, include=TRUE)
-knitr::knit_engines$set(python = reticulate::eng_python)
+# Python chunks are only displayed (eval=FALSE), so reticulate is not needed
+knitr::opts_chunk$set(echo=TRUE, eval=FALSE, include=TRUE, python.reticulate=FALSE)
 ```
 
 Using `healthiar` in Python is possible with the dedicated [wrapper package](https://pypi.org/project/healthiar/). The wrapper consists of a Python program that allows you to use the `healthiar` R package as if it were a Python package. In technical terms, the Python package works by running R embedded in Python. In addition to the wrapper, the package contains functions to convert Python data to R and back.
