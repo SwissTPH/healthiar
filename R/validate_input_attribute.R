@@ -149,11 +149,25 @@ validate_input_attribute <-
     # report = "all" (and not the default "first") because it is expected to
     # review quite a lot of arguments here
     # and it is nice to have all incorrect args at once
+    # NA is allowed in _lower and _upper: it means no uncertainty for this row,
+    # so its lower and upper impacts are NA.
+    # Therefore, the checks below on _lower and _upper accept NA
+    bound_args <- grep("_lower$|_upper$", numeric_args, value = TRUE)
+
     validate_args(
       args = input_args_value,
-      arg_names = numeric_args,
+      arg_names = setdiff(numeric_args, bound_args),
       is_valid = function(x){is.numeric(x) & !is.na(x)},
       message = "The following arguments should be numeric without NAs: {arg}.",
+      report = "all")
+
+    validate_args(
+      args = input_args_value,
+      arg_names = bound_args,
+      # NaN is not allowed, because the sums ignore NaN (see collapse_df_by_group()),
+      # so the row would be silently left out of the lower and upper totals
+      is_valid = function(x){!is.nan(x) & (is.numeric(x) | is.na(x))},
+      message = "The following arguments should be numeric (NA allowed, but not NaN): {arg}.",
       report = "all")
 
 
@@ -504,7 +518,7 @@ validate_input_attribute <-
       validate_args(
         args = input_args_value,
         arg_names = lifetable_args_with_values_0_or_above,
-        is_valid = function(x){x >= 0},
+        is_valid = function(x){is.na(x) | x >= 0},
         message = "The values in the following arguments must be 0 or higher: {arg}.",
         report = "all")
 
@@ -579,7 +593,7 @@ validate_input_attribute <-
         arg_names =
           intersect(arg_names_passed,
                           c("bhd_central", "bhd_lower", "bhd_upper")),
-        is_valid = function(x){x != 0},
+        is_valid = function(x){is.na(x) | x != 0},
         message =
           "Zeros in bhd_ arguments are theoretically possible,
           but they lack conceptual logic,
@@ -605,7 +619,7 @@ validate_input_attribute <-
     validate_args(
       args = input_args_value,
       arg_names = numeric_args,
-      is_valid = function(x){x >= 0},
+      is_valid = function(x){is.na(x) | x >= 0},
       message = "The values in the following arguments must not be lower than 0: {arg}.",
       report = "all")
 
@@ -616,7 +630,7 @@ validate_input_attribute <-
     validate_args(
       args = input_args_value,
       arg_names = c("prop_pop_exp", "fraction_lived", paste0("dw", ci_suffix)),
-      is_valid = function(x){x <= 1},
+      is_valid = function(x){is.na(x) | x <= 1},
       message = "The values in the following arguments must not be higher than 1: {arg}.",
       report = "all")
 
@@ -698,8 +712,8 @@ validate_input_attribute <-
         args = input_args_value,
         arg_names = paste0(x, "_central"),
         is_valid = function(v){
-          all(v >= input_args_value[[paste0(x, "_lower")]]) &&
-            all(v <= input_args_value[[paste0(x, "_upper")]])},
+          all(v >= input_args_value[[paste0(x, "_lower")]], na.rm = TRUE) &&
+            all(v <= input_args_value[[paste0(x, "_upper")]], na.rm = TRUE)},
         message =
           paste0("{arg} must not be lower than ", x, "_lower",
                        " and not higher than ", x, "_upper."))

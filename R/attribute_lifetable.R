@@ -12,6 +12,10 @@
 #'
 #' \strong{Function arguments}
 #'
+#' \code{..._lower}, \code{..._upper}
+#' Enter \code{NA} for the rows without confidence interval. Their lower and upper impacts are \code{NA}, and so are the sums that include them.
+#' The cells of the projection that no cohort reaches (e.g. without newborns) have an impact of 0.
+#'
 #' \code{age_group}
 #' The numeric values must refer to 1 year age groups, e.g. \code{c(0:99)}.
 #' To convert multi-year/larger age groups to 1 year age groups use the function \code{prepare_lifetable()}

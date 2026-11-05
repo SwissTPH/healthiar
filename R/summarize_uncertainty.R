@@ -290,6 +290,21 @@ summarize_uncertainty <- function(
                call. = FALSE)
   }
 
+  ## Error if NA in _lower or _upper ####
+  # Rows without confidence interval (NA) cannot be simulated
+  bound_names_with_na <-
+    grep("_lower$|_upper$", names(input_args_to_check$value), value = TRUE) |>
+    purrr::keep(~ anyNA(input_args_to_check$value[[.x]]))
+
+  if (length(bound_names_with_na) > 0) {
+    stop(
+      paste0(
+        "summarize_uncertainty() needs lower and upper values in all rows, ",
+        "but the following arguments contain NA: ",
+        toString(bound_names_with_na), "."),
+      call. = FALSE)
+  }
+
   ## Error if no argument with uncertainty ####
   if(# No argument used has _lower or _upper)
     ! any(grepl("_upper|_lower", input_arg_names_passed))){

@@ -68,7 +68,10 @@ collapse_df_by_group <- function(df,
         .fns = toString),
       dplyr::across(
         .cols = dplyr::all_of(sum_col_names),
-        .fns = ~ sum(.x, na.rm = TRUE)),
+        # NA (e.g. from NA in _lower or _upper) makes the sum NA.
+        # NaN (e.g. from an erf_eq evaluated at its own threshold)
+        # is ignored, 
+        .fns = ~ sum(.x[!is.nan(.x)])),
       dplyr::across(
         # [1] instead of dplyr::first() to also work with list columns
         .cols = dplyr::all_of(cols_to_keep),
