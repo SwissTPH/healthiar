@@ -2116,13 +2116,17 @@ To quantify the YLDs, you can use a prevalence-based or an
 incidence-based approach (Kim et al. 2022).
 
 - Prevalence-based: Enter `1` (year) in the argument(s) `duration_...`
-  (default) and *prevalence* cases in `bhd_...`.
+  and *prevalence* cases in `bhd_...`.
 
 - Incidence-based: Enter the duration of the disease in years (value
   above 1) in `duration_...` and *incidence* cases in `bhd_...`.
 
 In both approaches, enter the disability weight (between 0 and 1) in
 `dw_...`.
+
+`duration_central` has no default value on purpose: if you enter
+`dw_central`, you must also enter `duration_central` and thereby choose
+one of the two approaches.
 
 #### Example
 

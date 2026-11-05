@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1813</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1815</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -3141,7 +3141,7 @@ incidence-based approach <span class="citation">(Kim et al.
 2022)</span>.</p>
 <ul>
 <li><p>Prevalence-based: Enter <code>1</code> (year) in the argument(s)
-<code>duration_...</code> (default) and <em>prevalence</em> cases in
+<code>duration_...</code> and <em>prevalence</em> cases in
 <code>bhd_...</code>.</p></li>
 <li><p>Incidence-based: Enter the duration of the disease in years
 (value above 1) in <code>duration_...</code> and <em>incidence</em>
@@ -3149,6 +3149,10 @@ cases in <code>bhd_...</code>.</p></li>
 </ul>
 <p>In both approaches, enter the disability weight (between 0 and 1) in
 <code>dw_...</code>.</p>
+<p><code>duration_central</code> has no default value on purpose: if you
+enter <code>dw_central</code>, you must also enter
+<code>duration_central</code> and thereby choose one of the two
+approaches.</p>
 </div>
 <div class="section level4">
 <h4 id="example-13">Example<a class="anchor" aria-label="anchor" href="#example-13"></a>
