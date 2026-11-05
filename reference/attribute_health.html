@@ -63,7 +63,7 @@ duration_central, duration_lower, duration_upper
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1811</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1813</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -253,6 +253,8 @@ exposure to an environmental stressor (air pollution or noise), using either rel
 <p><em>Exception</em>: if you enter a disability weight (via the <code>dw_...</code> arguments) the attributable impact will be in YLD.</p>
 
 <p><strong>Function arguments</strong></p>
+<p><code>..._lower</code>, <code>..._upper</code>
+Enter <code>NA</code> for the rows without confidence interval. Their lower and upper impacts are <code>NA</code>, and so are the sums that include them.</p>
 <p><code>exp_central</code>, <code>exp_lower</code>, <code>exp_upper</code>
 In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).</p>
 <p><code>pop_exp</code>

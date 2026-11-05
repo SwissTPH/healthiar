@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1811</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1813</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -986,6 +986,12 @@ the baseline health data.</p></li>
 </ul>
 <p>Only 9 of the 27 possible combinations and a selection of columns are
 shown.</p>
+<p>If only some rows of your data have a confidence interval (e.g. one
+exposure-outcome pair has one, another has not), enter <code>NA</code>
+in the <code>_lower</code> and <code>_upper</code> values of the rows
+without it. Their lower and upper impacts are <code>NA</code>, and so
+are the sums that include them. <code><a href="../reference/summarize_uncertainty.html">summarize_uncertainty()</a></code>
+requires values in all rows.</p>
 </div>
 </div>
 </div>

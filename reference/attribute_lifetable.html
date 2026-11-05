@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1811</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1813</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -190,6 +190,9 @@ fraction of the age interval lived by individuals who die within that interval. 
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><strong>Function arguments</strong></p>
+<p><code>..._lower</code>, <code>..._upper</code>
+Enter <code>NA</code> for the rows without confidence interval. Their lower and upper impacts are <code>NA</code>, and so are the sums that include them.
+The cells of the projection that no cohort reaches (e.g. without newborns) have an impact of 0.</p>
 <p><code>age_group</code>
 The numeric values must refer to 1 year age groups, e.g. <code>c(0:99)</code>.
 To convert multi-year/larger age groups to 1 year age groups use the function <code><a href="prepare_lifetable.html">prepare_lifetable()</a></code>

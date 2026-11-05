@@ -295,6 +295,10 @@ arguments) the attributable impact will be in YLD.
 
 **Function arguments**
 
+`..._lower`, `..._upper` Enter `NA` for the rows without confidence
+interval. Their lower and upper impacts are `NA`, and so are the sums
+that include them.
+
 `exp_central`, `exp_lower`, `exp_upper` In case of exposure bands enter
 only one exposure value per band (e.g. the means of the lower and upper
 bounds of the exposure bands).

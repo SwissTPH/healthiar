@@ -258,6 +258,11 @@ results.
 
 **Function arguments**
 
+`..._lower`, `..._upper` Enter `NA` for the rows without confidence
+interval. Their lower and upper impacts are `NA`, and so are the sums
+that include them. The cells of the projection that no cohort reaches
+(e.g. without newborns) have an impact of 0.
+
 `age_group` The numeric values must refer to 1 year age groups, e.g.
 `c(0:99)`. To convert multi-year/larger age groups to 1 year age groups
 use the function

@@ -789,6 +789,13 @@ the other calculation pathway specifications in that row (not shown).
 Only 9 of the 27 possible combinations and a selection of columns are
 shown.
 
+If only some rows of your data have a confidence interval (e.g. one
+exposure-outcome pair has one, another has not), enter `NA` in the
+`_lower` and `_upper` values of the rows without it. Their lower and
+upper impacts are `NA`, and so are the sums that include them.
+[`summarize_uncertainty()`](https://swisstph.github.io/healthiar/reference/summarize_uncertainty.md)
+requires values in all rows.
+
 ### Monte Carlo simulation
 
 #### Goal
