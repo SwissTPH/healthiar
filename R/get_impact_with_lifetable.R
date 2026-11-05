@@ -215,7 +215,9 @@ get_impact_with_lifetable <-
       df$deaths_yoa <- df$entry_population_yoa - df$end_population_yoa
 
       # Entry population YOA+1 = lag ( End-of-year population YOA )
-      df$entry_population_yoa_plus_1 <- dplyr::lag(df$end_population_yoa)
+      # default = 0 (and not NA) because nobody gets one year older into the
+      # first age group
+      df$entry_population_yoa_plus_1 <- dplyr::lag(df$end_population_yoa, default = 0)
 
       return(df)
     }
@@ -303,14 +305,17 @@ get_impact_with_lifetable <-
         death_prob <- 1 - prob_survival
         n_ages <- nrow(df)      
 
-        # Initialise matrices
-        entry_pop <- matrix(NA, nrow = n_ages, ncol = n_years_projection,
+        # Initialise matrices with 0 (and not NA): the cells that the cohort
+        # never reaches have no people and therefore no impact. In this way,
+        # an NA impact can only come from an NA in _lower or _upper
+        # and makes the sums in get_output() NA
+        entry_pop <- matrix(0, nrow = n_ages, ncol = n_years_projection,
                                   # Row and column names
                                   # NULL because no row names
                                   dimnames = list(NULL, entry_names))
-        midyear_pop <- matrix(NA, nrow = n_ages, ncol = n_years_projection,
+        midyear_pop <- matrix(0, nrow = n_ages, ncol = n_years_projection,
                                   dimnames = list(NULL, midyear_names))
-        deaths <- matrix(NA, nrow = n_ages, ncol = n_years_projection,
+        deaths <- matrix(0, nrow = n_ages, ncol = n_years_projection,
                                   dimnames = list(NULL, death_names))      
         
 
