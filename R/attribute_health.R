@@ -50,6 +50,9 @@
 #'
 #' \strong{Function arguments}
 #'
+#' \code{..._lower}, \code{..._upper}
+#' Enter \code{NA} for the rows without confidence interval. Their lower and upper impacts are \code{NA}, and so are the sums that include them.
+#'
 #' \code{exp_central}, \code{exp_lower}, \code{exp_upper}
 #' In case of exposure bands enter only one exposure value per band (e.g. the means of the lower and upper bounds of the exposure bands).
 #'
