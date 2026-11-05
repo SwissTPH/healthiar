@@ -438,6 +438,27 @@ validate_input_attribute <-
     }
 
 
+    ### error_if_dw_and_no_duration #####
+    # duration has no default on purpose: users have to decide consciously
+    # whether they want prevalence-based YLD (duration = 1) or
+    # incidence-based YLD (duration > 1).
+    # A dedicated check (and not validate_args()) because
+    # validate_args() skips the arguments that are NULL
+    if(!is.null(input_args_value[["dw_central"]]) &&
+       is.null(input_args_value[["duration_central"]])){
+
+      stop(
+        paste0(
+          "You entered dw_central but no duration_central. ",
+          "Please, choose the YLD approach: ",
+          "enter duration_central = 1 for prevalence-based YLD ",
+          "(with prevalence cases in bhd_central) ",
+          "or the duration of the disease in years for incidence-based YLD ",
+          "(with incidence cases in bhd_central)."),
+        call. = FALSE)
+    }
+
+
     if(is_lifetable){
 
       ### error_if_no_health_outcome #####
