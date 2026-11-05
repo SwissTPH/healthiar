@@ -164,8 +164,10 @@ validate_input_attribute <-
     validate_args(
       args = input_args_value,
       arg_names = bound_args,
-      is_valid = function(x){is.numeric(x) | is.na(x)},
-      message = "The following arguments should be numeric: {arg}.",
+      # NaN is not allowed, because the sums ignore NaN (see collapse_df_by_group()),
+      # so the row would be silently left out of the lower and upper totals
+      is_valid = function(x){!is.nan(x) & (is.numeric(x) | is.na(x))},
+      message = "The following arguments should be numeric (NA allowed, but not NaN): {arg}.",
       report = "all")
 
 
