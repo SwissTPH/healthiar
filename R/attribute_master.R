@@ -66,7 +66,7 @@
 #' \code{Numeric value} or \code{numeric vector} providing the \strong{disability weight} associated with the morbidity health outcome of interest and (optionally) the corresponding lower bound and the upper 95\% confidence interval bounds. \emph{Only applicable in assessments of YLD (years lived with disability).}
 
 #' @param duration_central,duration_lower,duration_upper
-#' \code{Numeric value} or \code{numeric vector} providing the \strong{duration} associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Default: 1. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}
+#' \code{Numeric value} or \code{numeric vector} providing the \strong{duration} associated with the morbidity health outcome of interest in years and (optionally) the corresponding lower and upper bounds of the 95\% confidence interval. Required if \code{dw_central} is entered. See Details for more info. \emph{Only applicable in assessments of YLD (years lived with disability).}
 
 # Life table parameters
 #' @param health_outcome

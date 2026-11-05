@@ -4585,8 +4585,24 @@ testthat::test_that("error if dw higher than 1", {
         rr_central = 1.05,
         rr_increment = 10,
         dw_central = 1.1,
+        duration_central = 1,
         erf_shape = "log_linear"),
     regexp = "The values in the following arguments must not be higher than 1: dw_central.")
+})
+
+testthat::test_that("error if dw but no duration", {
+
+  testthat::expect_error(
+    object =
+      healthiar::attribute_health(
+        exp_central = 8.85,
+        cutoff_central = 5,
+        bhd_central = 25000,
+        rr_central = 1.118,
+        rr_increment = 10,
+        erf_shape = "log_linear",
+        dw_central = 0.5),
+    regexp = "You entered dw_central but no duration_central.")
 })
 
 testthat::test_that("error if not lower>central>upper", {
