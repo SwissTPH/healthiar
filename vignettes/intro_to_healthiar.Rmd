@@ -661,6 +661,8 @@ the other calculation pathway specifications in that row (not shown).
 
 Only `r length(1:9)` of the `r length(results_pm_copd$health_detailed$results_raw$impact)` possible combinations and a selection of columns are shown.
 
+If only some rows of your data have a confidence interval (e.g. one exposure-outcome pair has one, another has not), enter `NA` in the `_lower` and `_upper` values of the rows without it. Their lower and upper impacts are `NA`, and so are the sums that include them. `summarize_uncertainty()` requires values in all rows.
+
 ## Monte Carlo simulation
 
 ### Goal
