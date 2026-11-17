@@ -44,6 +44,10 @@ published on PyPI.
 - New package Description and startup disclaimer.
 - Citation of the JOSS paper (doi:10.21105/joss.10599) in DESCRIPTION
 and CITATION.cff.
+- exdat_socialize: geographic units without deprivation score removed and
+documentation updated to the actual columns.
+- socialize(): documented how geographic units without value in
+social_indicator (NA) are handled.
 
 ## Testing
 - 11 additional internal tests. Now a total of 475 tests.
