@@ -124,7 +124,12 @@ exdat_socialize <- dplyr::bind_rows(
   # The data set contains the RR for the exposure but not per increment.
   # Calculable as e.g. exp(log(1.038017)/(4.848199)*10)
   # Replace the value of rr (originally corresponds to rr_at_exp)
-  dplyr::mutate(rr = 1.08)
+  dplyr::mutate(rr = 1.08) |>
+  # Remove the geographic units without score: the deprivation index covers
+  # fewer census sectors than the mortality data, so the join above gives NA.
+  # Without score, these units cannot be assigned to a quantile and
+  # socialize() warns about them. The example data should run without warning
+  dplyr::filter(!is.na(score))
 
 # save data ####################################################################
 # usethis::use_data(exdat_socialize, overwrite = TRUE)
