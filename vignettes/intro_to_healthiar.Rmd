@@ -2936,12 +2936,6 @@ If you assume that the least deprived areas are similar to counterfactual cases 
 the relative difference regarding the overall average health impact 
 could be interpreted as some kind of relative risk attributable to social inequalities.
 
-If you assume that the least deprived areas are similar to
-counter-factual cases (no exposure to deprivation), the relative
-difference regarding the overall average health impact could be
-interpreted as some kind of relative risk attributable to social
-inequalities.
-
 ### Example
 
 In the example below, we compare the mortality attributable to PM2.5 exposure across deciles of a deprivation score.
