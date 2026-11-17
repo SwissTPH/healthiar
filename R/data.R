@@ -281,7 +281,7 @@ NULL
 #'   \item{rr}{relative risk per 10 \eqn{\mu g/m^3} increase in PM2.5 exposure}
 #'   \item{mortality}{(fake) mortality}
 #'   \item{population}{(fake) population}
-#'   \item{score}{deprivation score (Belgian Index of Multiple Deprivation 2011, without health domain)}
+#'   \item{score}{deprivation score of the geographic unit}
 #'   \item{ref_prop_pop}{(fake) proportion of the age group in the reference population}
 #' }
 
