@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1815</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -4518,6 +4518,14 @@ least deprived areas (the last n-quantile) and</p>
 <li><p>absolute or</p></li>
 <li><p>relative.</p></li>
 </ul>
+<p>Geographic units without a value in the social indicator
+(<code>NA</code>), e.g. because the deprivation index is not available
+for small areas, cannot be assigned to a quantile. They are left out of
+the comparison between the most and least deprived quantiles. However,
+they still count in the overall values, because the overall values refer
+to the whole study area, i.e. the health impacts that were estimated. If
+you prefer to exclude them from the overall values too, remove them
+before calling the attribute function.</p>
 <div class="section level5">
 <h5 id="difference-most-deprived-vs--least-deprived">Difference most deprived vs. least deprived<a class="anchor" aria-label="anchor" href="#difference-most-deprived-vs--least-deprived"></a>
 </h5>
@@ -4557,11 +4565,6 @@ counterfactual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.</p>
-<p>If you assume that the least deprived areas are similar to
-counter-factual cases (no exposure to deprivation), the relative
-difference regarding the overall average health impact could be
-interpreted as some kind of relative risk attributable to social
-inequalities.</p>
 </div>
 </div>
 <div class="section level4">
@@ -4595,10 +4598,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  geo_id_micro <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">geo_unit</span>,</span>
 <span>  social_indicator <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">score</span>,</span>
 <span>  n_quantile <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: 194 geographic unit(s) have no value in social_indicator. They get no</span></span>
-<span><span class="co">#&gt; social_quantile and are therefore not included in the comparison between the</span></span>
-<span><span class="co">#&gt; quantiles (first and last), but they are still part of the overall values.</span></span></code></pre></div>
+<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, you can directly enter the health impact in the
 <code><a href="../reference/socialize.html">socialize()</a></code> argument <code>impact</code>.</p>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
@@ -4610,10 +4610,7 @@ output of <code><a href="../reference/attribute_health.html">attribute_health()<
 <span>  social_indicator <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">score</span>,</span>
 <span>  population <span class="op">=</span> <span class="va">exdat_socialize</span><span class="op">$</span><span class="va">population</span>, <span class="co"># Population has to be provided because no output_attribute</span></span>
 <span>  n_quantile <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: 194 geographic unit(s) have no value in social_indicator. They get no</span></span>
-<span><span class="co">#&gt; social_quantile and are therefore not included in the comparison between the</span></span>
-<span><span class="co">#&gt; quantiles (first and last), but they are still part of the overall values.</span></span></code></pre></div>
+<span>  increasing_deprivation <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
 <h5 id="main-results-19">Main results<a class="anchor" aria-label="anchor" href="#main-results-19"></a>

@@ -212,8 +212,9 @@ attribute_health(
   `Numeric value` or `numeric vector` providing the **duration**
   associated with the morbidity health outcome of interest in years and
   (optionally) the corresponding lower and upper bounds of the 95%
-  confidence interval. Default: 1. See Details for more info. *Only
-  applicable in assessments of YLD (years lived with disability).*
+  confidence interval. Required if `dw_central` is entered. See Details
+  for more info. *Only applicable in assessments of YLD (years lived
+  with disability).*
 
 - info:
 

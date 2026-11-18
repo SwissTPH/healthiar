@@ -1,7 +1,10 @@
-# Municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI)
+# Census sectors in Flanders (Belgium) with deprivation score
 
-This tibble contains data for municipalities in Belgium ranked by
-BEST-COST Multidimensional Deprivation Index (MDI).
+This data frame contains data for the census sectors of Flanders
+(Belgium) with their deprivation score. Each census sector has one row
+per age group. The census sectors without deprivation score were
+removed, because the deprivation index covers fewer census sectors than
+the mortality data.
 
 ## Usage
 
@@ -13,50 +16,41 @@ data(exdat_socialize)
 
 `exdat_socialize`
 
-- CS01012020:
-
-  unique identifier of the geographic unit
-
 - NUTS1:
 
   NUTS1 region tag
 
-- PM25_MEAN:
+- geo_unit:
+
+  unique identifier of the geographic unit (census sector)
+
+- age_group:
+
+  age group: `"below_40"` or `"40_plus"`
+
+- pm25_mean:
 
   mean PM2.5 exposure
 
-- RR:
+- rr:
 
-  relative risk estimate from the literature
+  relative risk per 10 \\\mu g/m^3\\ increase in PM2.5 exposure
+
+- mortality:
+
+  (fake) mortality
+
+- population:
+
+  (fake) population
 
 - score:
 
-  BEST-COST Multidimensional Deprivation Index (MDI)
+  deprivation score of the geographic unit
 
-- rank:
+- ref_prop_pop:
 
-  rank of the observation based on column *score*; note that the rank is
-  not continuous, as some observations are missing
-
-- deciles:
-
-  deciles of the geo units based on the MDI
-
-- POPULATION_below_40:
-
-  (fake) populations up until and including 39 years of age
-
-- POPULATION_40_plus:
-
-  (fake) populations from 40 years of age onwards
-
-- MORTALITY_below_40:
-
-  (fake) mortality up until and including 39 years of age
-
-- MORTALITY_40_plus:
-
-  (fake) mortality from 40 years of age onwards
+  (fake) proportion of the age group in the reference population
 
 ## Source
 

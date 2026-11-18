@@ -3385,6 +3385,15 @@ These differences can be
 
 - relative.
 
+Geographic units without a value in the social indicator (`NA`), e.g.
+because the deprivation index is not available for small areas, cannot
+be assigned to a quantile. They are left out of the comparison between
+the most and least deprived quantiles. However, they still count in the
+overall values, because the overall values refer to the whole study
+area, i.e. the health impacts that were estimated. If you prefer to
+exclude them from the overall values too, remove them before calling the
+attribute function.
+
 ##### Difference most deprived vs. least deprived
 
 ``` math
@@ -3414,12 +3423,6 @@ Where:
 
 If you assume that the least deprived areas are similar to
 counterfactual cases (no exposure to deprivation), the relative
-difference regarding the overall average health impact could be
-interpreted as some kind of relative risk attributable to social
-inequalities.
-
-If you assume that the least deprived areas are similar to
-counter-factual cases (no exposure to deprivation), the relative
 difference regarding the overall average health impact could be
 interpreted as some kind of relative risk attributable to social
 inequalities.
@@ -3463,9 +3466,6 @@ social_t <- healthiar::socialize(
   social_indicator = exdat_socialize$score,
   n_quantile = 10,
   increasing_deprivation = TRUE)
-#> Warning: 194 geographic unit(s) have no value in social_indicator. They get no
-#> social_quantile and are therefore not included in the comparison between the
-#> quantiles (first and last), but they are still part of the overall values.
 ```
 
 Alternatively, you can directly enter the health impact in the
@@ -3483,9 +3483,6 @@ social <- healthiar::socialize(
   population = exdat_socialize$population, # Population has to be provided because no output_attribute
   n_quantile = 10,
   increasing_deprivation = TRUE)
-#> Warning: 194 geographic unit(s) have no value in social_indicator. They get no
-#> social_quantile and are therefore not included in the comparison between the
-#> quantiles (first and last), but they are still part of the overall values.
 ```
 
 ##### Main results

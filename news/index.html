@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">healthiar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.7.1815</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,43 @@
       <small>Source: <a href="https://github.com/SwissTPH/healthiar/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="healthiar-v030">healthiar v0.3.0<a class="anchor" aria-label="anchor" href="#healthiar-v030"></a></h2><p class="text-muted">CRAN release: 2026-11-17</p>
+<ul><li>17 November 2026</li>
+</ul><div class="section level3">
+<h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
+<ul><li>monetize() accepts vectors in valuation, discount_rate and discount_shape parallel to the arguments of the attribute function (e.g. one valuation per exposure-outcome pair), so that all pairs and geographic units are monetized in one single call. real_growth_rate can also be entered by row (e.g. one rate per country) if output_attribute contains more than one assessment.</li>
+<li>monetize() accepts the output of daly(). YLL and YLD are monetized separately (YLL from life tables discounted year by year) and then summed.</li>
+<li>daly() accepts the outputs of compare() to obtain the difference in DALY between two scenarios.</li>
+<li>NA can be entered in the _lower and _upper arguments for the rows without confidence interval. The sums that include NA in lower and upper impacts are NA. summarize_uncertainty() shows a clear error in this case.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-3-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
+<ul><li>compare() summed the dimensions entered in main_results_by (e.g. exposure-outcome pairs) instead of keeping them apart.</li>
+<li>health_main was empty if the name of an info column contained “_ci” (e.g. info_city_name).</li>
+<li>monetize() with life tables ignored main_results_by and summed the exposure-outcome pairs.</li>
+<li>monetization_main dropped the columns entered in main_results_by.</li>
+<li>monetize() failed if info columns were integers.</li>
+<li>The outputs of daly() could not be monetized.</li>
+<li>attribute_health() and attribute_lifetable() failed with an unclear message if dw_central was entered without duration_central. Now an error asks the user to choose between prevalence-based (duration_central = 1) and incidence-based YLD.</li>
+<li>monetize() silently applied a vector in valuation, discount_rate or discount_shape per year if impact was entered. Now an error is shown.</li>
+<li>monetize() shows an error instead of silent NA if the values entered by row cannot be assigned to the rows of the results.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-3-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-3-0"></a></h3>
+<ul><li>New vignette on using healthiar from Python, with a Python wrapper published on PyPI.</li>
+<li>Restructured and harmonized intro_to_healthiar vignette and README.</li>
+<li>New package Description and startup disclaimer.</li>
+<li>Citation of the JOSS paper (<a href="doi:10.21105/joss.10599" class="uri">doi:10.21105/joss.10599</a>) in DESCRIPTION and CITATION.cff.</li>
+<li>exdat_socialize: geographic units without deprivation score removed and documentation updated to the actual columns.</li>
+<li>socialize(): documented how geographic units without value in social_indicator (NA) are handled.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="testing-0-3-0">Testing<a class="anchor" aria-label="anchor" href="#testing-0-3-0"></a></h3>
+<ul><li>11 additional internal tests. Now a total of 475 tests.</li>
+<li>New tests for monetize() (values by row, daly(), main_results_by), compare() with main_results_by and attribute_health() with NA in bounds and dw without duration.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.7" id="healthiar-v027">healthiar v0.2.7<a class="anchor" aria-label="anchor" href="#healthiar-v027"></a></h2><p class="text-muted">CRAN release: 2026-10-12</p>
 <ul><li>12 October 2026</li>

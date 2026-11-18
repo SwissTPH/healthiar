@@ -54,7 +54,8 @@ socialize(
   geographic unit. The length and the values must correspond with
   `geo_id_micro`. If `geo_id_micro` is not entered when using argument
   `output_attribute`, `social_indicator` must correspond to the column
-  `geo_id_micro` in `results_by_age_group` of `output_attribute`.
+  `geo_id_micro` in `results_by_age_group` of `output_attribute`. `NA`
+  is allowed (see Details).
 
 - increasing_deprivation:
 
@@ -146,6 +147,12 @@ This function estimates the absolute and relative differences in
 attributable health impacts comparing study areas with different values
 for a socio-economic indicator (Renard et al. 2019) .
 
+**Missing values in the social indicator**
+
+Geographic units without value in `social_indicator` (`NA`) are not
+assigned to any quantile, but they are still included in the overall
+values. A warning is shown.
+
 Detailed information about the methodology (including equations) is
 available in the package vignette. More specifically, see chapters:
 
@@ -204,7 +211,6 @@ results <- socialize(
   social_indicator = exdat_socialize$score,
   n_quantile = 10,
   increasing_deprivation = TRUE)
-#> Warning: 194 geographic unit(s) have no value in social_indicator. They get no social_quantile and are therefore not included in the comparison between the quantiles (first and last), but they are still part of the overall values.
 
 
 results$social_main |>
