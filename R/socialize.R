@@ -13,7 +13,7 @@
 #' @param age_group
 #' \code{String vector} with the age groups included in the age standardization. The vector refers to age-dependent data in this function and to \code{output_attribute} (if provided).
 #' @param social_indicator
-#' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. The length and the values must correspond with \code{geo_id_micro}. If \code{geo_id_micro} is not entered when using argument \code{output_attribute}, \code{social_indicator} must correspond to the column \code{geo_id_micro} in \code{results_by_age_group} of \code{output_attribute}.
+#' \code{Numeric vector} showing the social indicator used for the analysis, e.g. a deprivation score (indicator of economic wealth) for each geographic unit. The length and the values must correspond with \code{geo_id_micro}. If \code{geo_id_micro} is not entered when using argument \code{output_attribute}, \code{social_indicator} must correspond to the column \code{geo_id_micro} in \code{results_by_age_group} of \code{output_attribute}. \code{NA} is allowed (see Details).
 #' @param increasing_deprivation
 #' \code{Boolean} variable (\code{TRUE}/\code{FALSE}) specifying whether an increase in \code{social_indicator} corresponds to an increase (\code{TRUE}) or decrease \code{FALSE} in deprivation. Default: \code{TRUE}.
 #' @param n_quantile
@@ -43,6 +43,12 @@
 #' This function estimates the absolute and relative differences in attributable health impacts
 #' comparing study areas with different values for a socio-economic indicator
 #' \insertCite{Renard2019_bmc}{healthiar}.
+#'
+#' \strong{Missing values in the social indicator}
+#'
+#' Geographic units without value in \code{social_indicator} (\code{NA})
+#' are not assigned to any quantile, but they are still included in the overall values.
+#' A warning is shown.
 #'
 #' Detailed information about the methodology (including equations)
 #' is available in the package vignette.

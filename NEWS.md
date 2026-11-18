@@ -1,5 +1,61 @@
 Main changes but not complete list. For this propose see Github commits.
 
+# healthiar v0.3.0
+* 17 November 2026
+
+## New features
+- monetize() accepts vectors in valuation, discount_rate and discount_shape
+parallel to the arguments of the attribute function (e.g. one valuation per
+exposure-outcome pair), so that all pairs and geographic units are monetized
+in one single call. real_growth_rate can also be entered by row
+(e.g. one rate per country) if output_attribute contains more than one
+assessment.
+- monetize() accepts the output of daly(). YLL and YLD are monetized
+separately (YLL from life tables discounted year by year) and then summed.
+- daly() accepts the outputs of compare() to obtain the difference in DALY
+between two scenarios.
+- NA can be entered in the _lower and _upper arguments for the rows without
+confidence interval. The sums that include NA in lower and upper impacts are NA. 
+summarize_uncertainty() shows a clear error in this case.
+
+## Bug Fixes
+- compare() summed the dimensions entered in main_results_by (e.g.
+exposure-outcome pairs) instead of keeping them apart.
+- health_main was empty if the name of an info column contained "_ci"
+(e.g. info_city_name).
+- monetize() with life tables ignored main_results_by and summed the
+exposure-outcome pairs.
+- monetization_main dropped the columns entered in main_results_by.
+- monetize() failed if info columns were integers.
+- The outputs of daly() could not be monetized.
+- attribute_health() and attribute_lifetable() failed with an unclear message
+if dw_central was entered without duration_central. Now an error asks the
+user to choose between prevalence-based (duration_central = 1) and
+incidence-based YLD.
+- monetize() silently applied a vector in valuation, discount_rate or
+discount_shape per year if impact was entered. Now an error is shown.
+- monetize() shows an error instead of silent NA if the values entered by row
+cannot be assigned to the rows of the results.
+
+## Documentation
+- New vignette on using healthiar from Python, with a Python wrapper
+published on PyPI.
+- Restructured and harmonized intro_to_healthiar vignette and README.
+- New package Description and startup disclaimer.
+- Citation of the JOSS paper (doi:10.21105/joss.10599) in DESCRIPTION
+and CITATION.cff.
+- exdat_socialize: geographic units without deprivation score removed and
+documentation updated to the actual columns.
+- socialize(): documented how geographic units without value in
+social_indicator (NA) are handled.
+
+## Testing
+- 11 additional internal tests. Now a total of 475 tests.
+- New tests for monetize() (values by row, daly(), main_results_by),
+compare() with main_results_by and attribute_health() with NA in bounds
+and dw without duration.
+
+
 # healthiar v0.2.7
 * 12 October 2026
 

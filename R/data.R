@@ -264,24 +264,25 @@ NULL
 
 # exdat_socialize ##############################################################
 
-#' Municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI)
+#' Census sectors in Flanders (Belgium) with deprivation score
 
 #' @description
-#' This tibble contains data for municipalities in Belgium ranked by BEST-COST Multidimensional Deprivation Index (MDI).
+#' This data frame contains data for the census sectors of Flanders (Belgium) with their deprivation score.
+#' Each census sector has one row per age group.
+#' The census sectors without deprivation score were removed,
+#' because the deprivation index covers fewer census sectors than the mortality data.
 
 #' @format \code{exdat_socialize}
 #' \describe{
-#'   \item{CS01012020}{unique identifier of the geographic unit}
 #'   \item{NUTS1}{NUTS1 region tag}
-#'   \item{PM25_MEAN}{mean PM2.5 exposure}
-#'   \item{RR}{relative risk estimate from the literature}
-#'   \item{score}{BEST-COST Multidimensional Deprivation Index (MDI)}
-#'   \item{rank}{rank of the observation based on column \emph{score}; note that the rank is not continuous, as some observations are missing}
-#'   \item{deciles}{deciles of the geo units based on the MDI}
-#'   \item{POPULATION_below_40}{(fake) populations up until and including 39 years of age}
-#'   \item{POPULATION_40_plus}{(fake) populations from 40 years of age onwards}
-#'   \item{MORTALITY_below_40}{(fake) mortality up until and including 39 years of age}
-#'   \item{MORTALITY_40_plus}{(fake) mortality from 40 years of age onwards}
+#'   \item{geo_unit}{unique identifier of the geographic unit (census sector)}
+#'   \item{age_group}{age group: \code{"below_40"} or \code{"40_plus"}}
+#'   \item{pm25_mean}{mean PM2.5 exposure}
+#'   \item{rr}{relative risk per 10 \eqn{\mu g/m^3} increase in PM2.5 exposure}
+#'   \item{mortality}{(fake) mortality}
+#'   \item{population}{(fake) population}
+#'   \item{score}{deprivation score of the geographic unit}
+#'   \item{ref_prop_pop}{(fake) proportion of the age group in the reference population}
 #' }
 
 #' @source Real-world data combined with fake population and mortality data
