@@ -1016,8 +1016,6 @@ used to create the ERF
 
 ## Sub-group analysis
 
-## Sub-group analysis
-
 Every sub-group stratifies the assessment: by age group, by sex, or by
 anything entered in `info`, such as education level. What differs is
 what happens to that stratification in the main results.
